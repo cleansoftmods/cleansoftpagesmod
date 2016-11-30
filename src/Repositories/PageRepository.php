@@ -4,9 +4,8 @@ use WebEd\Base\Core\Repositories\AbstractBaseRepository;
 
 use WebEd\Base\Caching\Services\Contracts\CacheableContract;
 use WebEd\Base\Pages\Repositories\Contracts\PageContract;
-use WebEd\Base\Core\Repositories\Contracts\HasTranslationContract;
 
-class PageRepository extends AbstractBaseRepository implements PageContract, HasTranslationContract, CacheableContract
+class PageRepository extends AbstractBaseRepository implements PageContract, CacheableContract
 {
     protected $rules = [
         'page_template' => 'string|max:255|nullable',

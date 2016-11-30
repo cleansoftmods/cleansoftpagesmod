@@ -80,7 +80,7 @@ class BootstrapModuleServiceProvider extends ServiceProvider
             }
             return [
                 'model_title' => $page->title,
-                'url' => route('public.get-by-slug.get', ['slug' => $page->slug]),
+                'url' => route('front.resolve-pages.get', ['slug' => $page->slug]),
             ];
         });
     }
@@ -89,7 +89,7 @@ class BootstrapModuleServiceProvider extends ServiceProvider
     {
         cms_settings()
             ->addSettingField('default_homepage', [
-                'group' => 'theme-options',
+                'group' => 'basic',
                 'type' => 'select',
                 'piority' => 0,
                 'label' => 'Default homepage',

@@ -29,8 +29,8 @@ class InstallModuleServiceProvider extends ServiceProvider
              */
             acl_permission()
                 ->registerPermission('View pages', 'view-pages', $this->module)
-                ->registerPermission('Create page', 'create-pages', $this->module)
-                ->registerPermission('Edit page', 'edit-pages', $this->module)
+                ->registerPermission('Create pages', 'create-pages', $this->module)
+                ->registerPermission('Edit pages', 'edit-pages', $this->module)
                 ->registerPermission('Delete pages', 'delete-pages', $this->module);
         });
     }
