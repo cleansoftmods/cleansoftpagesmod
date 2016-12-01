@@ -27,6 +27,8 @@ class BootstrapModuleServiceProvider extends ServiceProvider
 
     private function booted()
     {
+        \AdminBar::registerLink('Page', route('admin::pages.create.get'), 'add-new');
+
         $this->registerMenu();
         $this->registerMenuDashboard();
         $this->registerSettings();
