@@ -10,6 +10,15 @@ class EloquentPage extends BaseModel implements PageModelContract
     protected $primaryKey = 'id';
 
     protected $fillable = [
-        'created_by'
+        'title', 'page_template', 'slug', 'description', 'content', 'thumbnail', 'keywords', 'status', 'order',
+        'created_by', 'updated_by', 'created_at', 'updated_at',
     ];
+
+    public function getContentAttribute($value)
+    {
+        if (!is_in_dashboard()) {
+            return do_shortcode($value);
+        }
+        return $value;
+    }
 }

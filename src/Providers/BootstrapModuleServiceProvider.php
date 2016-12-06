@@ -21,17 +21,12 @@ class BootstrapModuleServiceProvider extends ServiceProvider
     public function boot()
     {
         app()->booted(function () {
-            $this->booted();
+            \AdminBar::registerLink('Page', route('admin::pages.create.get'), 'add-new');
+
+            $this->registerMenu();
+            $this->registerMenuDashboard();
+            $this->registerSettings();
         });
-    }
-
-    private function booted()
-    {
-        \AdminBar::registerLink('Page', route('admin::pages.create.get'), 'add-new');
-
-        $this->registerMenu();
-        $this->registerMenuDashboard();
-        $this->registerSettings();
     }
 
     private function registerMenuDashboard()
@@ -82,7 +77,7 @@ class BootstrapModuleServiceProvider extends ServiceProvider
             }
             return [
                 'model_title' => $page->title,
-                'url' => route('front.resolve-pages.get', ['slug' => $page->slug]),
+                'url' => route('front.web.resolve-pages.get', ['slug' => $page->slug]),
             ];
         });
     }
