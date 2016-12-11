@@ -2,6 +2,7 @@
 
 use WebEd\Base\Core\Models\EloquentBase as BaseModel;
 use WebEd\Base\Pages\Models\Contracts\PageModelContract;
+use WebEd\Base\Users\Models\EloquentUser;
 
 class EloquentPage extends BaseModel implements PageModelContract
 {
@@ -14,6 +15,26 @@ class EloquentPage extends BaseModel implements PageModelContract
         'created_by', 'updated_by', 'created_at', 'updated_at',
     ];
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function author()
+    {
+        return $this->belongsTo(EloquentUser::class, 'created_by');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function modifier()
+    {
+        return $this->belongsTo(EloquentUser::class, 'updated_by');
+    }
+
+    /**
+     * @param $value
+     * @return string
+     */
     public function getContentAttribute($value)
     {
         if (!is_in_dashboard()) {
