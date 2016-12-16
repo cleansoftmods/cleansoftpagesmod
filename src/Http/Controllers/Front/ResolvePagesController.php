@@ -56,6 +56,12 @@ class ResolvePagesController extends BaseFrontController
          */
         increase_view_count($page, $page->id);
 
+        seo()
+            ->metaDescription($page->description)
+            ->metaImage($page->thumbnail)
+            ->metaKeywords($page->keywords)
+            ->setModelObject($page);
+
         \AdminBar::registerLink('Edit this page', route('admin::pages.edit.get', ['id' => $page->id]));
 
         $this->setPageTitle($page->title);
