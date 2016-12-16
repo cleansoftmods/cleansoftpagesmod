@@ -11,7 +11,7 @@
 @section('js-init')
     <script type="text/javascript">
         $(document).ready(function () {
-            $('.js-ckeditor').ckeditor({});
+            WebEd.ckeditor($('.js-ckeditor'));
 
             $('.js-validate-form').validate({
                 errorElement: 'span', //default input error message container
@@ -87,15 +87,6 @@
                         <textarea name="content"
                                   class="form-control js-ckeditor">{{ $object->content or '' }}</textarea>
                     </div>
-                    <div class="form-group">
-                        <label class="control-label">
-                            <b>Sort order</b>
-                            <span class="required">*</span>
-                        </label>
-                        <input type="text" name="order"
-                               class="form-control"
-                               value="{{ $object->order or '0' }}" autocomplete="off">
-                    </div>
                 </div>
             </div>
             <div class="box box-primary">
@@ -139,6 +130,23 @@
                 'name' => 'thumbnail',
                 'value' => (isset($object->thumbnail) ? $object->thumbnail : null)
             ])
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Sort order</h3>
+                    <div class="box-tools">
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i
+                                class="fa fa-minus"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <div class="form-group">
+                        <input type="text" name="order"
+                               class="form-control"
+                               value="{{ $object->order or '0' }}" autocomplete="off">
+                    </div>
+                </div>
+            </div>
             @php do_action('meta_boxes', 'bottom-sidebar', 'page', $object) @endphp
             <div class="box box-primary">
                 <div class="box-header with-border">

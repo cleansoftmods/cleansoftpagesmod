@@ -21,7 +21,7 @@ class ResolvePagesController extends BaseFrontController
     {
         parent::__construct();
 
-        $this->themeController = \ThemesManagement::getThemeController('Page');
+        $this->themeController = themes_management()->getThemeController('Page');
 
         $this->repository = $repository;
     }
@@ -58,8 +58,6 @@ class ResolvePagesController extends BaseFrontController
 
         \AdminBar::registerLink('Edit this page', route('admin::pages.edit.get', ['id' => $page->id]));
 
-        $this->getMenu('page', $page->id);
-
         $this->setPageTitle($page->title);
 
         $this->dis['object'] = $page;
@@ -67,6 +65,8 @@ class ResolvePagesController extends BaseFrontController
         if($this->themeController) {
             return $this->themeController->handle($page, $this->dis);
         }
+
+        $this->getMenu('page', $page->id);
 
         $happyMethod = '_template_' . studly_case($page->page_template);
 
