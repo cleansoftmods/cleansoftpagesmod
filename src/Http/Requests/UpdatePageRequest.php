@@ -13,9 +13,4 @@ class UpdatePageRequest extends Request
         'keywords' => 'string|max:255|nullable',
         'page_template' => 'string|max:255|nullable',
     ];
-
-    public function authorize()
-    {
-        return $this->user()->hasPermission('edit-page');
-    }
 }
