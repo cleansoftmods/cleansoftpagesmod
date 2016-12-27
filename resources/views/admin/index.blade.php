@@ -8,22 +8,6 @@
 
 @endsection
 
-@section('js-init')
-    <script>
-        $(window).load(function () {
-            WebEd.DataTableAjax.init($('table.datatables'), {
-                dataTableParams: {
-                    ajax: {
-                        url: '{!! route('admin::pages.index.post') !!}',
-                        method: 'POST'
-                    },
-                    columns: {!! $dataTableHeadings or '[]' !!}
-                }
-            });
-        });
-    </script>
-@endsection
-
 @section('content')
     <div class="layout-1columns">
         <div class="column main">
@@ -42,7 +26,7 @@
                 </div>
                 <!-- /.box-header -->
                 <div class="box-body">
-                    @include('webed-core::admin._components.datatables', (isset($dataTableColumns) ? $dataTableColumns : []))
+                    {!! $dataTable or '' !!}
                 </div>
                 <!-- /.box-body -->
             </div>

@@ -47,4 +47,5 @@ $router->group(['prefix' => $adminRoute . '/' . $moduleRoute], function (Router 
  * Front site
  */
 $router->get('/{slug?}', 'Front\ResolvePagesController@handle')
+    ->where('slug', '[-A-Za-z0-9]+')
     ->name('front.web.resolve-pages.get');

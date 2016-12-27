@@ -1,9 +1,10 @@
 <?php namespace WebEd\Base\Pages\Http\Controllers;
 
 use WebEd\Base\Core\Http\Controllers\BaseAdminController;
-use WebEd\Base\Core\Support\DataTable\DataTables;
+use WebEd\Base\Pages\Http\DataTables\PagesListDataTable;
 use WebEd\Base\Pages\Http\Requests\UpdatePageRequest;
 use WebEd\Base\Pages\Repositories\Contracts\PageContract;
+use Yajra\Datatables\Engines\BaseEngine;
 
 class PageController extends BaseAdminController
 {
@@ -28,113 +29,24 @@ class PageController extends BaseAdminController
      * @method GET
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function getIndex()
+    public function getIndex(PagesListDataTable $pagesListDataTable)
     {
-        $this->assets->addJavascripts('jquery-datatables');
-
         $this->setPageTitle('CMS pages', 'All available cms pages');
 
-        $this->dis['dataTableColumns'] = [
-            'headings' => [
-                ['name' => 'Title', 'width' => '25%'],
-                ['name' => 'Page template', 'width' => '15%'],
-                ['name' => 'Status', 'width' => '10%'],
-                ['name' => 'Sort order', 'width' => '10%'],
-                ['name' => 'Created at', 'width' => '10%'],
-                ['name' => 'Actions', 'width' => '20%'],
-            ],
-            'filter' => [
-                1 => form()->text('title', '', [
-                    'class' => 'form-control form-filter input-sm',
-                    'placeholder' => 'Search...'
-                ]),
-                2 => form()->text('page_template', '', [
-                    'class' => 'form-control form-filter input-sm',
-                    'placeholder' => 'Search...'
-                ]),
-                3 => form()->select('status', [
-                    '' => '',
-                    'activated' => 'Activated',
-                    'disabled' => 'Disabled',
-                ], null, ['class' => 'form-control form-filter input-sm'])
-            ],
-            'tableActions' => form()->select('', [
-                '' => 'Select' . '...',
-                'deleted' => 'Deleted',
-                'activated' => 'Activated',
-                'disabled' => 'Disabled',
-            ], null, [
-                'class' => 'table-group-action-input form-control input-inline input-small input-sm'
-            ])
-        ];
-
-        $this->dis['dataTableHeadings'] = json_encode([
-            ['data' => 'id', 'name' => 'id', 'searchable' => false, 'orderable' => false],
-            ['data' => 'title', 'name' => 'title'],
-            ['data' => 'page_template', 'name' => 'page_template'],
-            ['data' => 'status', 'name' => 'status'],
-            ['data' => 'order', 'name' => 'order', 'searchable' => false],
-            ['data' => 'created_at', 'name' => 'created_at', 'searchable' => false],
-            ['data' => 'actions', 'name' => 'actions', 'searchable' => false, 'orderable' => false],
-        ]);
+        $this->dis['dataTable'] = $pagesListDataTable->run();
 
         return do_filter('pages.index.get', $this)->viewAdmin('index');
     }
 
     /**
-     * Get data for DataTable
-     * @param DataTables $dataTable
-     * @return \Illuminate\Http\JsonResponse
+     * @param PagesListDataTable|BaseEngine $pagesListDataTable
+     * @return mixed
      */
-    public function postListing(DataTables $dataTable)
+    public function postListing(PagesListDataTable $pagesListDataTable)
     {
-        $data = $dataTable
-            ->of($this->repository)
-            ->with($this->groupAction())
-            ->editColumn('id', function ($item) {
-                return \Form::customCheckbox(['id[]' => [$item->id]]);
-            })
-            ->editColumn('status', function ($item) {
-                return \Html::label($item->status, $item->status);
-            })
-            ->addColumn('actions', function ($item) {
-                /*Edit link*/
-                $activeLink = route('admin::pages.update-status.post', ['id' => $item->id, 'status' => 'activated']);
-                $disableLink = route('admin::pages.update-status.post', ['id' => $item->id, 'status' => 'disabled']);
-                $deleteLink = route('admin::pages.delete.delete', ['id' => $item->id]);
+        $data = $pagesListDataTable->with($this->groupAction());
 
-                /*Buttons*/
-                $editBtn = link_to(route('admin::pages.edit.get', ['id' => $item->id]), 'Edit', ['class' => 'btn btn-sm btn-outline green']);
-                $activeBtn = ($item->status != 'activated') ? \Form::button('Active', [
-                    'title' => 'Active this item',
-                    'data-ajax' => $activeLink,
-                    'data-method' => 'POST',
-                    'data-toggle' => 'confirmation',
-                    'class' => 'btn btn-outline blue btn-sm ajax-link',
-                    'type' => 'button',
-                ]) : '';
-                $disableBtn = ($item->status != 'disabled') ? \Form::button('Disable', [
-                    'title' => 'Disable this item',
-                    'data-ajax' => $disableLink,
-                    'data-method' => 'POST',
-                    'data-toggle' => 'confirmation',
-                    'class' => 'btn btn-outline yellow-lemon btn-sm ajax-link',
-                    'type' => 'button',
-                ]) : '';
-                $deleteBtn = \Form::button('Delete', [
-                    'title' => 'Delete this item',
-                    'data-ajax' => $deleteLink,
-                    'data-method' => 'DELETE',
-                    'data-toggle' => 'confirmation',
-                    'class' => 'btn btn-outline red-sunglo btn-sm ajax-link',
-                    'type' => 'button',
-                ]);
-
-                return $editBtn . $activeBtn . $disableBtn . $deleteBtn;
-            });
-
-        return do_filter('datatables.pages.index.post', $data, $this)
-            ->make(true);
+        return do_filter('datatables.pages.index.post', $data, $this);
     }
 
     /**
@@ -145,7 +57,7 @@ class PageController extends BaseAdminController
     {
         $data = [];
         if ($this->request->get('customActionType', null) === 'group_action') {
-            if(!$this->userRepository->hasPermission($this->loggedInUser, 'edit-pages')) {
+            if (!$this->userRepository->hasPermission($this->loggedInUser, 'edit-pages')) {
                 return [
                     'customActionMessage' => 'You do not have permission',
                     'customActionStatus' => 'danger',
@@ -157,7 +69,7 @@ class PageController extends BaseAdminController
 
             switch ($actionValue) {
                 case 'deleted':
-                    if(!$this->userRepository->hasPermission($this->loggedInUser, 'delete-pages')) {
+                    if (!$this->userRepository->hasPermission($this->loggedInUser, 'delete-pages')) {
                         return [
                             'customActionMessage' => 'You do not have permission',
                             'customActionStatus' => 'danger',
@@ -235,12 +147,10 @@ class PageController extends BaseAdminController
      */
     public function getEdit($id)
     {
-        $this->assets
-            ->addJavascripts([
-                'jquery-ckeditor'
-            ]);
+        $id = do_filter('pages.before-edit.get', $id);
 
         $item = $this->repository->find($id);
+
         if (!$item) {
             $this->flashMessagesHelper
                 ->addMessages('This page not exists', 'danger')
@@ -248,6 +158,11 @@ class PageController extends BaseAdminController
 
             return redirect()->back();
         }
+
+        $this->assets
+            ->addJavascripts([
+                'jquery-ckeditor'
+            ]);
 
         $this->setPageTitle('Edit page', $item->title);
         $this->breadcrumbs->addLink('Edit page');
@@ -280,6 +195,8 @@ class PageController extends BaseAdminController
         if ((int)$id < 1) {
             $result = $this->createPage($data);
         } else {
+            $id = do_filter('pages.before-edit.post', $id);
+
             $result = $this->updatePage($id, $data);
         }
 
@@ -291,8 +208,8 @@ class PageController extends BaseAdminController
             ->addMessages($result['messages'], $msgType)
             ->showMessagesOnSession();
 
-        if($result['error']) {
-            if(!$id) {
+        if ($result['error']) {
+            if (!$id) {
                 return redirect()->back()->withInput();
             }
         }
@@ -315,7 +232,7 @@ class PageController extends BaseAdminController
      */
     private function createPage(array $data)
     {
-        if(!$this->userRepository->hasPermission($this->loggedInUser, 'create-pages')) {
+        if (!$this->userRepository->hasPermission($this->loggedInUser, 'create-pages')) {
             return redirect()->to(route('admin::error', ['code' => 403]));
         }
 
@@ -340,6 +257,8 @@ class PageController extends BaseAdminController
      */
     public function deleteDelete($id)
     {
+        $id = do_filter('pages.before-delete.delete', $id);
+
         $result = $this->repository->deletePage($id);
 
         do_action('pages.after-delete.delete', $id, $result, $this);

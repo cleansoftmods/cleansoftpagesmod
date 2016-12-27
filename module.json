@@ -1,7 +1,7 @@
 {
     "alias": "webed-pages",
     "name": "Pages",
-    "version": "2.0.5",
+    "version": "2.0.8",
     "author": "Tedozi Manson - <a href=\"https://github.com/duyphan2502\">https://github.com/duyphan2502</a>",
     "description": "Pages management package",
     "namespace": "WebEd\\Base\\Pages",
