@@ -30,6 +30,10 @@ $router->group(['prefix' => $adminRoute . '/' . $moduleRoute], function (Router 
         ->name('admin::pages.create.get')
         ->middleware('has-permission:create-pages');
 
+    $router->post('create', 'PageController@postCreate')
+        ->name('admin::pages.create.post')
+        ->middleware('has-permission:create-pages');
+
     $router->get('edit/{id}', 'PageController@getEdit')
         ->name('admin::pages.edit.get')
         ->middleware('has-permission:edit-pages');

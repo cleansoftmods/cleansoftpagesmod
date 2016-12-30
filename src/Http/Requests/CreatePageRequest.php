@@ -2,12 +2,12 @@
 
 use WebEd\Base\Core\Http\Requests\Request;
 
-class UpdatePageRequest extends Request
+class CreatePageRequest extends Request
 {
     public $rules = [
         'page_template' => 'string|max:255|nullable',
         'title' => 'string|max:255|required',
-        'slug' => 'string|max:255|alpha_dash',
+        'slug' => 'string|max:255|required',
         'description' => 'string|max:1000',
         'content' => 'string',
         'thumbnail' => 'string|max:255',

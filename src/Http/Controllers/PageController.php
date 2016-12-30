@@ -1,7 +1,9 @@
 <?php namespace WebEd\Base\Pages\Http\Controllers;
 
+use Illuminate\Http\Request;
 use WebEd\Base\Core\Http\Controllers\BaseAdminController;
 use WebEd\Base\Pages\Http\DataTables\PagesListDataTable;
+use WebEd\Base\Pages\Http\Requests\CreatePageRequest;
 use WebEd\Base\Pages\Http\Requests\UpdatePageRequest;
 use WebEd\Base\Pages\Repositories\Contracts\PageContract;
 use Yajra\Datatables\Engines\BaseEngine;
@@ -78,7 +80,7 @@ class PageController extends BaseAdminController
                     /**
                      * Delete pages
                      */
-                    $result = $this->deleteDelete($ids);
+                    $result = $this->repository->delete($ids);
                     break;
                 case 'activated':
                 case 'disabled':
@@ -138,7 +140,34 @@ class PageController extends BaseAdminController
             }
         }
 
-        return do_filter('pages.create.get', $this)->viewAdmin('edit');
+        return do_filter('pages.create.get', $this)->viewAdmin('create');
+    }
+
+    public function postCreate(CreatePageRequest $request)
+    {
+        $data = $this->parseDataUpdate($request);
+
+        $data['created_by'] = $this->loggedInUser->id;
+
+        $result = $this->repository->createPage($data);
+
+        do_action('pages.after-create.post', $result, $this);
+
+        $msgType = $result['error'] ? 'danger' : 'success';
+
+        $this->flashMessagesHelper
+            ->addMessages($result['messages'], $msgType)
+            ->showMessagesOnSession();
+
+        if ($result['error']) {
+            return redirect()->back()->withInput();
+        }
+
+        if ($this->request->has('_continue_edit')) {
+            return redirect()->to(route('admin::pages.edit.get', ['id' => $result['data']->id]));
+        }
+
+        return redirect()->to(route('admin::pages.index.get'));
     }
 
     /**
@@ -177,28 +206,23 @@ class PageController extends BaseAdminController
      * @param $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postEdit(UpdatePageRequest $pageRequest, $id = null)
+    public function postEdit(UpdatePageRequest $request, $id)
     {
-        $data = [
-            'page_template' => $this->request->get('page_template', null),
-            'status' => $this->request->get('status'),
-            'title' => $this->request->get('title'),
-            'slug' => ($this->request->get('slug') ? str_slug($this->request->get('slug')) : str_slug($this->request->get('title'))),
-            'keywords' => $this->request->get('keywords'),
-            'description' => $this->request->get('description'),
-            'content' => $this->request->get('content'),
-            'thumbnail' => $this->request->get('thumbnail'),
-            'updated_by' => $this->loggedInUser->id,
-            'order' => $this->request->get('order'),
-        ];
+        $id = do_filter('pages.before-edit.post', $id);
 
-        if ((int)$id < 1) {
-            $result = $this->createPage($data);
-        } else {
-            $id = do_filter('pages.before-edit.post', $id);
+        $item = $this->repository->find($id);
 
-            $result = $this->updatePage($id, $data);
+        if (!$item) {
+            $this->flashMessagesHelper
+                ->addMessages('This page not exists', 'danger')
+                ->showMessagesOnSession();
+
+            return redirect()->back();
         }
+
+        $data = $this->parseDataUpdate($request);
+
+        $result = $this->repository->updatePage($id, $data);;
 
         do_action('pages.after-edit.post', $id, $result, $this);
 
@@ -208,47 +232,11 @@ class PageController extends BaseAdminController
             ->addMessages($result['messages'], $msgType)
             ->showMessagesOnSession();
 
-        if ($result['error']) {
-            if (!$id) {
-                return redirect()->back()->withInput();
-            }
-        }
-
         if ($this->request->has('_continue_edit')) {
-            if (!$id) {
-                if (!$result['error']) {
-                    return redirect()->to(route('admin::pages.edit.get', ['id' => $result['data']->id]));
-                }
-            }
             return redirect()->back();
         }
 
         return redirect()->to(route('admin::pages.index.get'));
-    }
-
-    /**
-     * @param array $data
-     * @return array
-     */
-    private function createPage(array $data)
-    {
-        if (!$this->userRepository->hasPermission($this->loggedInUser, 'create-pages')) {
-            return redirect()->to(route('admin::error', ['code' => 403]));
-        }
-
-        $data['created_by'] = $this->loggedInUser->id;
-
-        return $this->repository->createPage($data);
-    }
-
-    /**
-     * @param $id
-     * @param array $data
-     * @return array
-     */
-    private function updatePage($id, array $data)
-    {
-        return $this->repository->updatePage($id, $data);
     }
 
     /**
@@ -264,5 +252,21 @@ class PageController extends BaseAdminController
         do_action('pages.after-delete.delete', $id, $result, $this);
 
         return response()->json($result, $result['response_code']);
+    }
+
+    protected function parseDataUpdate(Request $request)
+    {
+        return [
+            'page_template' => $request->get('page_template', null),
+            'status' => $request->get('status'),
+            'title' => $request->get('title'),
+            'slug' => ($request->get('slug') ? str_slug($request->get('slug')) : str_slug($request->get('title'))),
+            'keywords' => $request->get('keywords'),
+            'description' => $request->get('description'),
+            'content' => $request->get('content'),
+            'thumbnail' => $request->get('thumbnail'),
+            'updated_by' => $this->loggedInUser->id,
+            'order' => $request->get('order'),
+        ];
     }
 }

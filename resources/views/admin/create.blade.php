@@ -40,15 +40,15 @@
 @endsection
 
 @section('content')
-    {!! Form::open(['class' => 'js-validate-form', 'url' => route('admin::pages.edit.post', ['id' => $currentId])]) !!}
+    {!! Form::open(['class' => 'js-validate-form', 'url' => route('admin::pages.create.post')]) !!}
     <div class="layout-2columns sidebar-right">
         <div class="column main">
             <div class="box box-primary">
                 <div class="box-header with-border">
                     <h3 class="box-title">Basic information</h3>
                     <div class="box-tools">
-                        <button type="button" class="btn btn-box-tool" data-widget="collapse">
-                            <i class="fa fa-minus"></i>
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i
+                                class="fa fa-minus"></i>
                         </button>
                     </div>
                 </div>
@@ -72,14 +72,6 @@
                                class="form-control"
                                value="{{ $object->slug or '' }}" autocomplete="off">
                     </div>
-                    @if($object->slug)
-                        <div class="form-group">
-                            <label class="control-label">
-                                <b>Visit page:</b>
-                            </label>
-                            <a href="{{ route('front.web.resolve-pages.get', ['slug' => $object->slug]) }}" target="_blank">{{ route('front.web.resolve-pages.get', ['slug' => $object->slug]) }}</a>
-                        </div>
-                    @endif
                     <div class="form-group">
                         <label class="control-label">
                             <b>Content</b>
@@ -117,10 +109,10 @@
                     </div>
                 </div>
             </div>
-            @php do_action('meta_boxes', 'main', 'pages.edit', $object) @endphp
+            @php do_action('meta_boxes', 'main', 'pages.create', $object) @endphp
         </div>
         <div class="column right">
-            @php do_action('meta_boxes', 'top-sidebar', 'pages.edit', $object) @endphp
+            @php do_action('meta_boxes', 'top-sidebar', 'pages.create', $object) @endphp
             @include('webed-core::admin._widgets.page-templates', [
                 'name' => 'page_template',
                 'templates' => get_templates('Page'),
@@ -147,7 +139,7 @@
                     </div>
                 </div>
             </div>
-            @php do_action('meta_boxes', 'bottom-sidebar', 'pages.edit', $object) @endphp
+            @php do_action('meta_boxes', 'bottom-sidebar', 'pages.create', $object) @endphp
             <div class="box box-primary">
                 <div class="box-header with-border">
                     <h3 class="box-title">Publish content</h3>

@@ -77,7 +77,7 @@ class PagesListDataTable extends AbstractDataTables
     {
         $this->fetch = datatable()->of($this->repository)
             ->editColumn('id', function ($item) {
-                return form()->customCheckbox(['id[]' => [$item->id]]);
+                return form()->customCheckbox([['id[]', $item->id]]);
             })
             ->editColumn('status', function ($item) {
                 return html()->label($item->status, $item->status);
