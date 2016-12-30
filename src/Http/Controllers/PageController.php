@@ -48,7 +48,7 @@ class PageController extends BaseAdminController
     {
         $data = $pagesListDataTable->with($this->groupAction());
 
-        return do_filter('datatables.pages.index.post', $data, $this);
+        return do_filter('datatables.pages.index.post', $data, $this, $pagesListDataTable);
     }
 
     /**
