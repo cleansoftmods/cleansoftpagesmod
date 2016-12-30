@@ -28,6 +28,7 @@ class PagesListDataTable extends AbstractDataTables
         $this->setAjaxUrl(route('admin::pages.index.post'), 'POST');
 
         $this
+            ->addHeading('id', 'ID', '5%')
             ->addHeading('title', 'Title', '25%')
             ->addHeading('page_template', 'Page template', '15%')
             ->addHeading('status', 'Status', '10%')
@@ -36,15 +37,19 @@ class PagesListDataTable extends AbstractDataTables
             ->addHeading('actions', 'Actions', '20%');
 
         $this
-            ->addFilter(1, form()->text('title', '', [
+            ->addFilter(1, form()->text('id', '', [
+                'class' => 'form-control form-filter input-sm',
+                'placeholder' => '...'
+            ]))
+            ->addFilter(2, form()->text('title', '', [
                 'class' => 'form-control form-filter input-sm',
                 'placeholder' => 'Search...'
             ]))
-            ->addFilter(2, form()->text('page_template', '', [
+            ->addFilter(3, form()->text('page_template', '', [
                 'class' => 'form-control form-filter input-sm',
                 'placeholder' => 'Search...'
             ]))
-            ->addFilter(3, form()->select('status', [
+            ->addFilter(4, form()->select('status', [
                 '' => '',
                 'activated' => 'Activated',
                 'disabled' => 'Disabled',
@@ -59,6 +64,7 @@ class PagesListDataTable extends AbstractDataTables
 
         $this->setColumns([
             ['data' => 'id', 'name' => 'id', 'searchable' => false, 'orderable' => false],
+            ['data' => 'viewID', 'name' => 'id'],
             ['data' => 'title', 'name' => 'title'],
             ['data' => 'page_template', 'name' => 'page_template'],
             ['data' => 'status', 'name' => 'status'],
@@ -81,6 +87,9 @@ class PagesListDataTable extends AbstractDataTables
             })
             ->editColumn('status', function ($item) {
                 return html()->label($item->status, $item->status);
+            })
+            ->addColumn('viewID', function ($item) {
+                return $item->id;
             })
             ->addColumn('actions', function ($item) {
                 /*Edit link*/
