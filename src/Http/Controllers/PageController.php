@@ -37,7 +37,7 @@ class PageController extends BaseAdminController
 
         $this->dis['dataTable'] = $pagesListDataTable->run();
 
-        return do_filter('pages.index.get', $this)->viewAdmin('index');
+        return do_filter('pages.index.get', $this, $pagesListDataTable)->viewAdmin('index');
     }
 
     /**
