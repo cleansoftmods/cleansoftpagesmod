@@ -2,9 +2,9 @@
 
 use WebEd\Base\Core\Models\EloquentBase as BaseModel;
 use WebEd\Base\Pages\Models\Contracts\PageModelContract;
-use WebEd\Base\Users\Models\EloquentUser;
+use WebEd\Base\Users\Models\User;
 
-class EloquentPage extends BaseModel implements PageModelContract
+class Page extends BaseModel implements PageModelContract
 {
     protected $table = 'pages';
 
@@ -20,7 +20,7 @@ class EloquentPage extends BaseModel implements PageModelContract
      */
     public function author()
     {
-        return $this->belongsTo(EloquentUser::class, 'created_by');
+        return $this->belongsTo(User::class, 'created_by');
     }
 
     /**
@@ -28,7 +28,7 @@ class EloquentPage extends BaseModel implements PageModelContract
      */
     public function modifier()
     {
-        return $this->belongsTo(EloquentUser::class, 'updated_by');
+        return $this->belongsTo(User::class, 'updated_by');
     }
 
     /**

@@ -2,7 +2,7 @@
 
 use WebEd\Base\Core\Http\Controllers\BaseFrontController;
 use WebEd\Base\Pages\Models\Contracts\PageModelContract;
-use WebEd\Base\Pages\Models\EloquentPage;
+use WebEd\Base\Pages\Models\Page;
 use WebEd\Base\Pages\Repositories\Contracts\PageContract;
 use WebEd\Base\Pages\Repositories\PageRepository;
 
@@ -84,7 +84,7 @@ class ResolvePagesController extends BaseFrontController
     }
 
     /**
-     * @param EloquentPage $page
+     * @param Page $page
      * @return mixed
      */
     protected function defaultTemplate(PageModelContract $page)
