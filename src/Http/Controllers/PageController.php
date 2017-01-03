@@ -176,8 +176,6 @@ class PageController extends BaseAdminController
      */
     public function getEdit($id)
     {
-        $id = do_filter('pages.before-edit.get', $id);
-
         $item = $this->repository->find($id);
 
         if (!$item) {
@@ -187,6 +185,8 @@ class PageController extends BaseAdminController
 
             return redirect()->back();
         }
+
+        $item = do_filter('pages.before-edit.get', $item);
 
         $this->assets
             ->addJavascripts([
