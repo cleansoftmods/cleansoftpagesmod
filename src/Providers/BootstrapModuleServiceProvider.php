@@ -36,7 +36,7 @@ class BootstrapModuleServiceProvider extends ServiceProvider
          */
         \DashboardMenu::registerItem([
             'id' => 'webed-pages',
-            'piority' => 1,
+            'priority' => 1,
             'parent_id' => null,
             'heading' => 'CMS',
             'title' => 'Pages',
@@ -89,7 +89,7 @@ class BootstrapModuleServiceProvider extends ServiceProvider
             ->addSettingField('default_homepage', [
                 'group' => 'basic',
                 'type' => 'select',
-                'piority' => 0,
+                'priority' => 0,
                 'label' => 'Default homepage',
                 'helper' => null
             ], function () {
