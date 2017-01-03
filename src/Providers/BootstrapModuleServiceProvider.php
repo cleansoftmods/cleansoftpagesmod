@@ -43,6 +43,7 @@ class BootstrapModuleServiceProvider extends ServiceProvider
             'font_icon' => 'icon-notebook',
             'link' => route('admin::pages.index.get'),
             'css_class' => null,
+            'permissions' => ['view-pages'],
         ]);
     }
 
