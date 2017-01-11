@@ -21,7 +21,7 @@ class ResolvePagesController extends BaseFrontController
     {
         parent::__construct();
 
-        $this->themeController = themes_management()->getThemeController('Page');
+        $this->themeController = themes_management()->getThemeController('Pages\Page');
 
         $this->repository = $repository;
     }
