@@ -23,6 +23,11 @@ class ResolvePagesController extends BaseFrontController
 
         $this->themeController = themes_management()->getThemeController('Pages\Page');
 
+        if (!$this->themeController) {
+            echo '<h2>You need to active a theme</h2>';
+            die();
+        }
+
         $this->repository = $repository;
     }
 
@@ -68,27 +73,6 @@ class ResolvePagesController extends BaseFrontController
 
         $this->dis['object'] = $page;
 
-        if($this->themeController) {
-            return $this->themeController->handle($page, $this->dis);
-        }
-
-        $this->getMenu('page', $page->id);
-
-        $happyMethod = '_template_' . studly_case($page->page_template);
-
-        if(method_exists($this, $happyMethod)) {
-            return $this->$happyMethod($page);
-        }
-
-        return $this->defaultTemplate($page);
-    }
-
-    /**
-     * @param Page $page
-     * @return mixed
-     */
-    protected function defaultTemplate(PageModelContract $page)
-    {
-        return $this->view('front.page-templates.default');
+        return $this->themeController->handle($page, $this->dis);
     }
 }
