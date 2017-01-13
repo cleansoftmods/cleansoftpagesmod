@@ -17,7 +17,7 @@ class RegisterDashboardStats
 
     public function handle()
     {
-        $count = $this->repository->select('id')->get()->count();
+        $count = $this->repository->count();
         echo view('webed-pages::admin.dashboard-stats.stat-box', [
             'count' => $count
         ]);
