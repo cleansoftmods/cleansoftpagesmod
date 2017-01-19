@@ -10,10 +10,12 @@ $adminRoute = config('webed.admin_route');
 
 $moduleRoute = 'pages';
 
+$namespace = 'WebEd\Base\Pages\Http\Controllers';
+
 /*
  * Admin route
  * */
-$router->group(['prefix' => $adminRoute . '/' . $moduleRoute], function (Router $router) use ($adminRoute, $moduleRoute) {
+$router->group(['prefix' => $adminRoute . '/' . $moduleRoute, 'namespace' => $namespace], function (Router $router) use ($adminRoute, $moduleRoute) {
     $router->get('/', 'PageController@getIndex')
         ->name('admin::pages.index.get')
         ->middleware('has-permission:view-pages');

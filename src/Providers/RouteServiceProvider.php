@@ -7,8 +7,6 @@ use Illuminate\Routing\Router;
 
 class RouteServiceProvider extends ServiceProvider
 {
-    protected $namespace = 'WebEd\Base\Pages\Http\Controllers';
-
     public function map(Router $router)
     {
         $router->group(['middleware' => 'web'], function (Router $router) {
