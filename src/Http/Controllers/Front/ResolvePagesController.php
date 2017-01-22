@@ -24,7 +24,12 @@ class ResolvePagesController extends BaseFrontController
         $this->themeController = themes_management()->getThemeController('Pages\Page');
 
         if (!$this->themeController) {
-            echo '<h2>You need to active a theme</h2>';
+            echo 'You need to active a theme';
+            die();
+        }
+
+        if (is_string($this->themeController)) {
+            echo 'Class ' . $this->themeController . ' not exists';
             die();
         }
 
