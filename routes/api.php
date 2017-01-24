@@ -6,7 +6,15 @@
  *
  */
 $router->group(['prefix' => 'api'], function (Router $router) {
-    $router->get('pages', function () {
-        echo 'sss'; exit;
-    });
+    /**
+     * Front site
+     */
+    foreach (config('webed-pages.custom_route_locations.api', []) as $file) {
+        require $file;
+    }
+    foreach (config('webed-pages.public_routes.api', []) as $method => $routeInfo) {
+        foreach ($routeInfo as $item) {
+            $router->$method($item[0], $item[1]);
+        }
+    }
 });

@@ -5,17 +5,35 @@ return [
      * Public routes
      */
     'public_routes' => [
-        'get' => [
-            [
-                '/{slug?}',
+        'web' => [
+            'get' => [
                 [
-                    'as' => 'front.web.resolve-pages.get',
-                    'uses' => 'WebEd\Base\Pages\Http\Controllers\Front\ResolvePagesController@handle',
-                    'where' => [
-                        'slug' => '[-A-Za-z0-9]+'
+                    '/{slug?}',
+                    [
+                        'as' => 'front.web.resolve-pages.get',
+                        'uses' => 'WebEd\Base\Pages\Http\Controllers\Front\ResolvePagesController@handle',
+                        'where' => [
+                            'slug' => '[-A-Za-z0-9]+'
+                        ]
                     ]
                 ]
-            ]
-        ]
+            ],
+        ],
+        'api' => [
+
+        ],
     ],
+    /**
+     * Custom route location
+     * You can pass the files directory here
+     * Example: web => [base_path(...), base_path(xxx)]
+     */
+    'custom_route_locations' => [
+        'web' => [
+
+        ],
+        'api' => [
+
+        ],
+    ]
 ];

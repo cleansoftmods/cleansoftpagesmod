@@ -52,7 +52,10 @@ $router->group(['prefix' => $adminRoute . '/' . $moduleRoute, 'namespace' => $na
 /**
  * Front site
  */
-foreach (config('webed-pages.public_routes') as $method => $routeInfo) {
+foreach (config('webed-pages.custom_route_locations.web', []) as $file) {
+    require $file;
+}
+foreach (config('webed-pages.public_routes.web', []) as $method => $routeInfo) {
     foreach ($routeInfo as $item) {
         $router->$method($item[0], $item[1]);
     }
