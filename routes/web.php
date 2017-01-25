@@ -1,10 +1,6 @@
-<?php use Illuminate\Routing\Router;
-
-/**
- *
- * @var Router $router
- *
- */
+<?php
+use Illuminate\Routing\Router;
+use Illuminate\Support\Facades\Route;
 
 $adminRoute = config('webed.admin_route');
 
@@ -15,7 +11,7 @@ $namespace = 'WebEd\Base\Pages\Http\Controllers';
 /*
  * Admin route
  * */
-$router->group(['prefix' => $adminRoute . '/' . $moduleRoute, 'namespace' => $namespace], function (Router $router) use ($adminRoute, $moduleRoute) {
+Route::group(['prefix' => $adminRoute . '/' . $moduleRoute, 'namespace' => $namespace], function (Router $router) use ($adminRoute, $moduleRoute) {
     $router->get('/', 'PageController@getIndex')
         ->name('admin::pages.index.get')
         ->middleware('has-permission:view-pages');
@@ -57,6 +53,6 @@ foreach (config('webed-pages.custom_route_locations.web', []) as $file) {
 }
 foreach (config('webed-pages.public_routes.web', []) as $method => $routeInfo) {
     foreach ($routeInfo as $item) {
-        $router->$method($item[0], $item[1]);
+        Route::$method($item[0], $item[1]);
     }
 }

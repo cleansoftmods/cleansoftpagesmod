@@ -1,11 +1,13 @@
-<?php use Illuminate\Routing\Router;
+<?php
+use Illuminate\Routing\Router;
+use Illuminate\Support\Facades\Route;
 
 /**
  *
- * @var Router $router
+ * @var
  *
  */
-$router->group(['prefix' => 'api'], function (Router $router) {
+Route::group(['prefix' => 'api'], function (Router $router) {
     /**
      * Front site
      */
