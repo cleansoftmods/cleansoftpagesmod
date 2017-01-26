@@ -59,7 +59,7 @@ class PageController extends BaseAdminController
     {
         $data = [];
         if ($this->request->get('customActionType', null) === 'group_action') {
-            if (!$this->userRepository->hasPermission($this->loggedInUser, 'edit-pages')) {
+            if (!$this->userRepository->hasPermission($this->loggedInUser, ['edit-pages'])) {
                 return [
                     'customActionMessage' => 'You do not have permission',
                     'customActionStatus' => 'danger',
@@ -71,7 +71,7 @@ class PageController extends BaseAdminController
 
             switch ($actionValue) {
                 case 'deleted':
-                    if (!$this->userRepository->hasPermission($this->loggedInUser, 'delete-pages')) {
+                    if (!$this->userRepository->hasPermission($this->loggedInUser, ['delete-pages'])) {
                         return [
                             'customActionMessage' => 'You do not have permission',
                             'customActionStatus' => 'danger',

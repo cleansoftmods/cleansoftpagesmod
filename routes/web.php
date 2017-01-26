@@ -34,7 +34,7 @@ Route::group(['prefix' => $adminRoute . '/' . $moduleRoute, 'namespace' => $name
 
     $router->get('edit/{id}', 'PageController@getEdit')
         ->name('admin::pages.edit.get')
-        ->middleware('has-permission:edit-pages');
+        ->middleware('has-permission:view-pages');
 
     $router->post('edit/{id}', 'PageController@postEdit')
         ->name('admin::pages.edit.post')
