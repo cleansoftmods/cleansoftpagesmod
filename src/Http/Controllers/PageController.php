@@ -193,7 +193,7 @@ class PageController extends BaseAdminController
                 'jquery-ckeditor'
             ]);
 
-        $this->setPageTitle('Edit page', $item->title);
+        $this->setPageTitle('Edit page', '#' . $item->id);
         $this->breadcrumbs->addLink('Edit page');
 
         $this->dis['object'] = $item;
