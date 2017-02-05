@@ -1,21 +1,18 @@
 <?php namespace WebEd\Base\Pages\Http\DataTables;
 
 use WebEd\Base\Core\Http\DataTables\AbstractDataTables;
-use WebEd\Base\Pages\Repositories\Contracts\PageContract;
-use WebEd\Base\Pages\Repositories\PageRepository;
+use WebEd\Base\Pages\Models\Page;
 
 class PagesListDataTable extends AbstractDataTables
 {
     /**
-     * @var PageRepository
+     * @var Page
      */
-    protected $repository;
+    protected $model;
 
     public function __construct()
     {
-        $this->repository = app(PageContract::class);
-
-        $this->repository->select('id', 'page_template', 'status', 'title', 'order', 'created_at');
+        $this->model = Page::select('id', 'page_template', 'status', 'title', 'order', 'created_at');
 
         parent::__construct();
     }
@@ -81,7 +78,7 @@ class PagesListDataTable extends AbstractDataTables
      */
     protected function fetch()
     {
-        $this->fetch = datatable()->of($this->repository)
+        $this->fetch = datatable()->of($this->model)
             ->editColumn('id', function ($item) {
                 return form()->customCheckbox([['id[]', $item->id]]);
             })
@@ -99,7 +96,7 @@ class PagesListDataTable extends AbstractDataTables
 
                 /*Buttons*/
                 $editBtn = link_to(route('admin::pages.edit.get', ['id' => $item->id]), 'Edit', ['class' => 'btn btn-sm btn-outline green']);
-                $activeBtn = ($item->status != 'activated') ? \Form::button('Active', [
+                $activeBtn = ($item->status != 'activated') ? form()->button('Active', [
                     'title' => 'Active this item',
                     'data-ajax' => $activeLink,
                     'data-method' => 'POST',
@@ -107,7 +104,7 @@ class PagesListDataTable extends AbstractDataTables
                     'class' => 'btn btn-outline blue btn-sm ajax-link',
                     'type' => 'button',
                 ]) : '';
-                $disableBtn = ($item->status != 'disabled') ? \Form::button('Disable', [
+                $disableBtn = ($item->status != 'disabled') ? form()->button('Disable', [
                     'title' => 'Disable this item',
                     'data-ajax' => $disableLink,
                     'data-method' => 'POST',
@@ -115,7 +112,7 @@ class PagesListDataTable extends AbstractDataTables
                     'class' => 'btn btn-outline yellow-lemon btn-sm ajax-link',
                     'type' => 'button',
                 ]) : '';
-                $deleteBtn = \Form::button('Delete', [
+                $deleteBtn = form()->button('Delete', [
                     'title' => 'Delete this item',
                     'data-ajax' => $deleteLink,
                     'data-method' => 'DELETE',

@@ -94,10 +94,11 @@ class BootstrapModuleServiceProvider extends ServiceProvider
                 'helper' => null
             ], function () {
                 /**
-                 * @var PageRepository $pages
+                 * @var PageRepository $pageRepo
                  */
-                $pages = app(PageContract::class);
-                $pages = $pages->where('status', '=', 'activated')
+                $pageRepo = app(PageContract::class);
+
+                $pages = $pageRepo->where('status', 'activated')
                     ->orderBy('order', 'ASC')
                     ->get();
 

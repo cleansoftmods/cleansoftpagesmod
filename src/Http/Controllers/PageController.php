@@ -131,7 +131,6 @@ class PageController extends BaseAdminController
         $this->breadcrumbs->addLink('Create page');
 
         $this->dis['object'] = $this->repository->getModel();
-        $this->dis['currentId'] = 0;
 
         $oldInputs = old();
         if ($oldInputs) {
@@ -197,7 +196,6 @@ class PageController extends BaseAdminController
         $this->breadcrumbs->addLink('Edit page');
 
         $this->dis['object'] = $item;
-        $this->dis['currentId'] = $id;
 
         return do_filter('pages.edit.get', $this, $id)->viewAdmin('edit');
     }
@@ -222,7 +220,7 @@ class PageController extends BaseAdminController
 
         $data = $this->parseDataUpdate($request);
 
-        $result = $this->repository->updatePage($id, $data);;
+        $result = $this->repository->updatePage($id, $data);
 
         do_action('pages.after-edit.post', $id, $result, $this);
 

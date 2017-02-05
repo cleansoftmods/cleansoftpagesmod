@@ -16,7 +16,7 @@ class RepositoryServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->bind(PageContract::class, function () {
-            $repository = new PageRepository(new Page);
+            $repository = new PageRepository(new Page());
 
             if (config('webed-caching.repository.enabled')) {
                 return new PageRepositoryCacheDecorator($repository);

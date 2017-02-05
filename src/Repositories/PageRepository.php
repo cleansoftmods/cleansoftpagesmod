@@ -1,12 +1,15 @@
 <?php namespace WebEd\Base\Pages\Repositories;
 
-use WebEd\Base\Core\Repositories\AbstractBaseRepository;
+use WebEd\Base\Caching\Services\Traits\Cacheable;
+use WebEd\Base\Core\Repositories\Eloquent\EloquentBaseRepository;
 
 use WebEd\Base\Caching\Services\Contracts\CacheableContract;
 use WebEd\Base\Pages\Repositories\Contracts\PageContract;
 
-class PageRepository extends AbstractBaseRepository implements PageContract, CacheableContract
+class PageRepository extends EloquentBaseRepository implements PageContract, CacheableContract
 {
+    use Cacheable;
+
     protected $rules = [
         'page_template' => 'string|max:255|nullable',
         'title' => 'string|max:255|required',
