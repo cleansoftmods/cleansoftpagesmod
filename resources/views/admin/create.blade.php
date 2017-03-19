@@ -33,7 +33,7 @@
                     <div class="form-group">
                         <label class="control-label">
                             <b>{{ trans('webed-core::base.form.title') }}</b>
-                            <span class="required">*</span>
+
                         </label>
                         <input required type="text" name="title"
                                class="form-control"
@@ -43,7 +43,7 @@
                     <div class="form-group">
                         <label class="control-label">
                             <b>{{ trans('webed-core::base.form.slug') }}</b>
-                            <span class="required">*</span>
+
                         </label>
                         <input type="text" name="slug"
                                class="form-control"
@@ -120,16 +120,18 @@
                             <b>{{ trans('webed-core::base.form.status') }}</b>
                         </label>
                         {!! form()->select('status', [
-                            'activated' => 'Activated',
-                            'disabled' => 'Disabled',
+                           'activated' => trans('webed-core::base.status.activated'),
+                            'disabled' => trans('webed-core::base.status.disabled'),
                         ], old('status'), ['class' => 'form-control']) !!}
                     </div>
                     <div class="text-right">
                         <button class="btn btn-primary" type="submit">
                             <i class="fa fa-check"></i> {{ trans('webed-core::base.form.save') }}
                         </button>
-                        <button class="btn btn-success" type="submit"
-                                name="_continue_edit" value="1">
+                        <button class="btn btn-success"
+                                type="submit"
+                                name="_continue_edit"
+                                value="1">
                             <i class="fa fa-check"></i> {{ trans('webed-core::base.form.save_and_continue') }}
                         </button>
                     </div>

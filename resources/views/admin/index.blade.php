@@ -15,12 +15,12 @@
                 <div class="box-header with-border">
                     <h3 class="box-title">
                         <i class="icon-layers font-dark"></i>
-                        All pages
+                        {{ trans('webed-pages::base.all_pages') }}
                     </h3>
                     <div class="box-tools">
                         <a class="btn btn-transparent green btn-sm"
                            href="{{ route('admin::pages.create.get') }}">
-                            <i class="fa fa-plus"></i> Create
+                            <i class="fa fa-plus"></i> {{ trans('webed-core::base.form.create') }}
                         </a>
                     </div>
                 </div>

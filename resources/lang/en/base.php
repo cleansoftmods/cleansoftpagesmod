@@ -8,4 +8,5 @@ return [
         'page_not_exists' => 'This page not exists',
     ],
     'page_title' => 'CMS pages',
+    'all_pages' => 'All pages',
 ];
