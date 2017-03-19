@@ -1,4 +1,4 @@
-<?php namespace WebEd\Base\Pages\Hook;
+<?php namespace WebEd\Base\Pages\Hook\Actions;
 
 use WebEd\Base\Pages\Repositories\Contracts\PageContract;
 use WebEd\Base\Pages\Repositories\PageRepository;

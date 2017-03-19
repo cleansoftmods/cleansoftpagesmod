@@ -1,6 +1,6 @@
 <?php namespace WebEd\Base\Pages\Http\Requests;
 
-use WebEd\Base\Core\Http\Requests\Request;
+use WebEd\Base\Http\Requests\Request;
 
 class UpdatePageRequest extends Request
 {

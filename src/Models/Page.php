@@ -1,6 +1,6 @@
 <?php namespace WebEd\Base\Pages\Models;
 
-use WebEd\Base\Core\Models\EloquentBase as BaseModel;
+use WebEd\Base\Models\EloquentBase as BaseModel;
 use WebEd\Base\Pages\Models\Contracts\PageModelContract;
 use WebEd\Base\Users\Models\User;
 

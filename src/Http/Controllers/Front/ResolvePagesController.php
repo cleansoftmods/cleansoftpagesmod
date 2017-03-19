@@ -1,6 +1,6 @@
 <?php namespace WebEd\Base\Pages\Http\Controllers\Front;
 
-use WebEd\Base\Core\Http\Controllers\BaseFrontController;
+use WebEd\Base\Http\Controllers\BaseFrontController;
 use WebEd\Base\Pages\Models\Contracts\PageModelContract;
 use WebEd\Base\Pages\Models\Page;
 use WebEd\Base\Pages\Repositories\Contracts\PageContract;

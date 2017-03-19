@@ -1,7 +1,7 @@
 <?php namespace WebEd\Base\Pages\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use WebEd\Base\Pages\Hook\RegisterDashboardStats;
+use WebEd\Base\Pages\Hook\Actions\RegisterDashboardStats;
 
 class HookServiceProvider extends ServiceProvider
 {
@@ -12,7 +12,7 @@ class HookServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        add_action('webed-dashboard.index.stat-boxes.get', [RegisterDashboardStats::class, 'handle'], 21);
+        add_action(WEBED_DASHBOARD_STATS, [RegisterDashboardStats::class, 'handle'], 21);
     }
 
     /**

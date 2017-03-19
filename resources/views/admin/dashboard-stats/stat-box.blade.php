@@ -2,13 +2,13 @@
     <div class="small-box bg-red">
         <div class="inner">
             <h3>{{ $count or 0 }}</h3>
-            <p>Pages</p>
+            <p>{{ trans('webed-pages::base.page_title') }}</p>
         </div>
         <div class="icon">
             <i class="icon-notebook"></i>
         </div>
         <a href="{{ route('admin::pages.index.get') }}" class="small-box-footer">
-            More info <i class="fa fa-arrow-circle-right"></i>
+            {{ trans('webed-core::base.stat_box.more_info') }} <i class="fa fa-arrow-circle-right"></i>
         </a>
     </div>
 </div>

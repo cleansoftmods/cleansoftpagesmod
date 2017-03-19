@@ -1,7 +1,7 @@
 <?php namespace WebEd\Base\Pages\Repositories;
 
 use WebEd\Base\Caching\Services\Traits\Cacheable;
-use WebEd\Base\Core\Repositories\Eloquent\EloquentBaseRepository;
+use WebEd\Base\Repositories\Eloquent\EloquentBaseRepository;
 
 use WebEd\Base\Caching\Services\Contracts\CacheableContract;
 use WebEd\Base\Pages\Repositories\Contracts\PageContract;

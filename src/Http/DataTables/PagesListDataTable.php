@@ -1,6 +1,6 @@
 <?php namespace WebEd\Base\Pages\Http\DataTables;
 
-use WebEd\Base\Core\Http\DataTables\AbstractDataTables;
+use WebEd\Base\Http\DataTables\AbstractDataTables;
 use WebEd\Base\Pages\Models\Page;
 
 class PagesListDataTable extends AbstractDataTables
@@ -13,8 +13,57 @@ class PagesListDataTable extends AbstractDataTables
     public function __construct()
     {
         $this->model = Page::select('id', 'page_template', 'status', 'title', 'order', 'created_at');
+    }
 
-        parent::__construct();
+    /**
+     * @return array
+     */
+    public function headings()
+    {
+        return [
+            'id' => [
+                'title' => 'ID',
+                'width' => '5%',
+            ],
+            'title' => [
+                'title' => trans('webed-core::datatables.heading.title'),
+                'width' => '25%',
+            ],
+            'page_template' => [
+                'title' => trans('webed-core::datatables.heading.page_template'),
+                'width' => '15%',
+            ],
+            'status' => [
+                'title' => trans('webed-core::datatables.heading.status'),
+                'width' => '10%',
+            ],
+            'order' => [
+                'title' => trans('webed-core::datatables.heading.order'),
+                'width' => '10%',
+            ],
+            'created_at' => [
+                'title' => trans('webed-core::datatables.heading.created_at'),
+                'width' => '10%',
+            ],
+            'actions' => [
+                'title' => trans('webed-core::datatables.heading.actions'),
+                'width' => '20%',
+            ],
+        ];
+    }
+
+    public function columns()
+    {
+        return [
+            ['data' => 'id', 'name' => 'id', 'searchable' => false, 'orderable' => false],
+            ['data' => 'viewID', 'name' => 'id'],
+            ['data' => 'title', 'name' => 'title'],
+            ['data' => 'page_template', 'name' => 'page_template'],
+            ['data' => 'status', 'name' => 'status'],
+            ['data' => 'order', 'name' => 'order', 'searchable' => false],
+            ['data' => 'created_at', 'name' => 'created_at', 'searchable' => false],
+            ['data' => 'actions', 'name' => 'actions', 'searchable' => false, 'orderable' => false],
+        ];
     }
 
     /**
@@ -25,49 +74,29 @@ class PagesListDataTable extends AbstractDataTables
         $this->setAjaxUrl(route('admin::pages.index.post'), 'POST');
 
         $this
-            ->addHeading('id', 'ID', '5%')
-            ->addHeading('title', 'Title', '25%')
-            ->addHeading('page_template', 'Page template', '15%')
-            ->addHeading('status', 'Status', '10%')
-            ->addHeading('order', 'Sort order', '10%')
-            ->addHeading('created_at', 'Created at', '10%')
-            ->addHeading('actions', 'Actions', '20%');
-
-        $this
             ->addFilter(1, form()->text('id', '', [
                 'class' => 'form-control form-filter input-sm',
                 'placeholder' => '...'
             ]))
             ->addFilter(2, form()->text('title', '', [
                 'class' => 'form-control form-filter input-sm',
-                'placeholder' => 'Search...'
+                'placeholder' => trans('webed-core::datatables.search') . '...',
             ]))
             ->addFilter(3, form()->text('page_template', '', [
                 'class' => 'form-control form-filter input-sm',
-                'placeholder' => 'Search...'
+                'placeholder' => trans('webed-core::datatables.search') . '...',
             ]))
             ->addFilter(4, form()->select('status', [
-                '' => '',
-                'activated' => 'Activated',
-                'disabled' => 'Disabled',
+                '' => trans('webed-core::datatables.all'),
+                'activated' => trans('webed-core::base.status.activated'),
+                'disabled' => trans('webed-core::base.status.disabled'),
             ], null, ['class' => 'form-control form-filter input-sm']));
 
         $this->withGroupActions([
-            '' => 'Select' . '...',
-            'deleted' => 'Deleted',
-            'activated' => 'Activated',
-            'disabled' => 'Disabled',
-        ]);
-
-        $this->setColumns([
-            ['data' => 'id', 'name' => 'id', 'searchable' => false, 'orderable' => false],
-            ['data' => 'viewID', 'name' => 'id'],
-            ['data' => 'title', 'name' => 'title'],
-            ['data' => 'page_template', 'name' => 'page_template'],
-            ['data' => 'status', 'name' => 'status'],
-            ['data' => 'order', 'name' => 'order', 'searchable' => false],
-            ['data' => 'created_at', 'name' => 'created_at', 'searchable' => false],
-            ['data' => 'actions', 'name' => 'actions', 'searchable' => false, 'orderable' => false],
+            '' => trans('webed-core::datatables.select') . '...',
+            'deleted' => trans('webed-core::datatables.delete_these_items'),
+            'activated' => trans('webed-core::datatables.active_these_items'),
+            'disabled' => trans('webed-core::datatables.disable_these_items'),
         ]);
 
         return $this->view();
@@ -76,9 +105,10 @@ class PagesListDataTable extends AbstractDataTables
     /**
      * @return $this
      */
-    protected function fetch()
+    protected function fetDataForAjax()
     {
-        $this->fetch = datatable()->of($this->model)
+        return datatable()->of($this->model)
+            ->rawColumns(['actions'])
             ->editColumn('id', function ($item) {
                 return form()->customCheckbox([['id[]', $item->id]]);
             })
@@ -96,24 +126,24 @@ class PagesListDataTable extends AbstractDataTables
 
                 /*Buttons*/
                 $editBtn = link_to(route('admin::pages.edit.get', ['id' => $item->id]), 'Edit', ['class' => 'btn btn-sm btn-outline green']);
-                $activeBtn = ($item->status != 'activated') ? form()->button('Active', [
-                    'title' => 'Active this item',
+                $activeBtn = ($item->status != 'activated') ? form()->button(trans('webed-core::datatables.active'), [
+                    'title' => trans('webed-core::datatables.active_this_item'),
                     'data-ajax' => $activeLink,
                     'data-method' => 'POST',
                     'data-toggle' => 'confirmation',
                     'class' => 'btn btn-outline blue btn-sm ajax-link',
                     'type' => 'button',
                 ]) : '';
-                $disableBtn = ($item->status != 'disabled') ? form()->button('Disable', [
-                    'title' => 'Disable this item',
+                $disableBtn = ($item->status != 'disabled') ? form()->button(trans('webed-core::datatables.disable'), [
+                    'title' => trans('webed-core::datatables.disable_this_item'),
                     'data-ajax' => $disableLink,
                     'data-method' => 'POST',
                     'data-toggle' => 'confirmation',
                     'class' => 'btn btn-outline yellow-lemon btn-sm ajax-link',
                     'type' => 'button',
                 ]) : '';
-                $deleteBtn = form()->button('Delete', [
-                    'title' => 'Delete this item',
+                $deleteBtn = form()->button(trans('webed-core::datatables.delete'), [
+                    'title' => trans('webed-core::datatables.delete_this_item'),
                     'data-ajax' => $deleteLink,
                     'data-method' => 'DELETE',
                     'data-toggle' => 'confirmation',
@@ -123,7 +153,5 @@ class PagesListDataTable extends AbstractDataTables
 
                 return $editBtn . $activeBtn . $disableBtn . $deleteBtn;
             });
-
-        return $this;
     }
 }

@@ -1,6 +1,6 @@
 <?php namespace WebEd\Base\Pages\Repositories;
 
-use WebEd\Base\Caching\Repositories\Eloquent\EloquentBaseRepositoryCacheDecorator;
+use WebEd\Base\Repositories\Eloquent\EloquentBaseRepositoryCacheDecorator;
 use WebEd\Base\Pages\Repositories\Contracts\PageContract;
 
 class PageRepositoryCacheDecorator extends EloquentBaseRepositoryCacheDecorator implements PageContract

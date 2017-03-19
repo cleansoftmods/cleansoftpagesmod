@@ -39,6 +39,8 @@ class ModuleProvider extends ServiceProvider
      */
     public function register()
     {
+        load_module_helpers(__DIR__);
+
         //Merge configs
         $configs = split_files_with_basename($this->app['files']->glob(__DIR__ . '/../../config/*.php'));
 

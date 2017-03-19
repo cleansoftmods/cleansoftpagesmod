@@ -26,7 +26,7 @@ return [
     /**
      * Custom route location
      * You can pass the files directory here
-     * Example: web => [base_path(...), base_path(xxx)]
+     * Example: web => [base_path(aaa.php), base_path(xxx.php)]
      */
     'custom_route_locations' => [
         'web' => [
