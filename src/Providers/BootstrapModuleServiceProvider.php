@@ -1,6 +1,7 @@
 <?php namespace WebEd\Base\Pages\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use WebEd\Base\Pages\Criterias\Filters\FilterPagesCriteria;
 use WebEd\Base\Pages\Repositories\Contracts\PageContract;
 use WebEd\Base\Pages\Repositories\PageRepository;
 
@@ -38,8 +39,8 @@ class BootstrapModuleServiceProvider extends ServiceProvider
             'id' => 'webed-pages',
             'priority' => 1,
             'parent_id' => null,
-            'heading' => 'CMS',
-            'title' => 'Pages',
+            'heading' => trans('webed-pages::base.admin_menu.pages.heading'),
+            'title' => trans('webed-pages::base.admin_menu.pages.title'),
             'font_icon' => 'icon-notebook',
             'link' => route('admin::pages.index.get'),
             'css_class' => null,
@@ -52,9 +53,13 @@ class BootstrapModuleServiceProvider extends ServiceProvider
         /**
          * Register menu widget
          */
-        \MenuManagement::registerWidget('Pages', 'page', function () {
+        \MenuManagement::registerWidget(trans('webed-pages::base.admin_menu.pages.title'), 'page', function () {
             $repository = app(PageContract::class)
-                ->orderBy('created_at', 'DESC')
+                ->pushCriteria(new FilterPagesCriteria([
+                    'status' => 'activated'
+                ], [
+                    'order' => 'ASC'
+                ]))
                 ->get();
             $pages = [];
             foreach ($repository as $page) {
@@ -71,14 +76,16 @@ class BootstrapModuleServiceProvider extends ServiceProvider
          */
         \MenuManagement::registerLinkType('page', function ($id) {
             $page = app(PageContract::class)
-                ->where('id', '=', $id)
-                ->first();
+                ->findWhere([
+                    'status' => 'activated',
+                    'id' => $id,
+                ]);
             if (!$page) {
                 return null;
             }
             return [
                 'model_title' => $page->title,
-                'url' => route('front.web.resolve-pages.get', ['slug' => $page->slug]),
+                'url' => get_page_link($page),
             ];
         });
     }
@@ -90,16 +97,20 @@ class BootstrapModuleServiceProvider extends ServiceProvider
                 'group' => 'basic',
                 'type' => 'select',
                 'priority' => 0,
-                'label' => 'Default homepage',
-                'helper' => null
+                'label' => trans('webed-pages::base.settings.default_homepage.label'),
+                'helper' => trans('webed-pages::base.settings.default_homepage.helper')
             ], function () {
                 /**
                  * @var PageRepository $pageRepo
                  */
                 $pageRepo = app(PageContract::class);
 
-                $pages = $pageRepo->where('status', 'activated')
-                    ->orderBy('order', 'ASC')
+                $pages = $pageRepo
+                    ->pushCriteria(new FilterPagesCriteria([
+                        'status' => 'activated'
+                    ], [
+                        'order' => 'ASC'
+                    ]))
                     ->get();
 
                 $pagesArr = [];

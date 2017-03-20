@@ -52,6 +52,9 @@ class PagesListDataTable extends AbstractDataTables
         ];
     }
 
+    /**
+     * @return array
+     */
     public function columns()
     {
         return [
@@ -105,7 +108,7 @@ class PagesListDataTable extends AbstractDataTables
     /**
      * @return $this
      */
-    protected function fetDataForAjax()
+    protected function fetchDataForAjax()
     {
         return datatable()->of($this->model)
             ->rawColumns(['actions'])

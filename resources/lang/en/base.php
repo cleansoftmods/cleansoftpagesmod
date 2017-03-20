@@ -1,6 +1,12 @@
 <?php
 
 return [
+    'admin_menu' => [
+        'pages' => [
+            'heading' => 'CMS',
+            'title' => 'Pages',
+        ],
+    ],
     'form' => [
         'create_page' => 'Create page',
         'edit_page' => 'Edit page',
@@ -9,4 +15,10 @@ return [
     ],
     'page_title' => 'CMS pages',
     'all_pages' => 'All pages',
+    'settings' => [
+        'default_homepage' => [
+            'label' => 'Default homepage',
+            'helper' => 'The default page when user request without url slugs'
+        ],
+    ],
 ];
