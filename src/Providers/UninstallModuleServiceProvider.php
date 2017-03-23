@@ -4,7 +4,7 @@ use Illuminate\Support\ServiceProvider;
 
 class UnInstallModuleServiceProvider extends ServiceProvider
 {
-    protected $module = 'WebEd\Base\Pages';
+    protected $module = 'webed-pages';
 
     /**
      * Register the application services.

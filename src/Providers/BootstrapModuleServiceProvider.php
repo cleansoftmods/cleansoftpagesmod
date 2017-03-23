@@ -7,8 +7,6 @@ use WebEd\Base\Pages\Repositories\PageRepository;
 
 class BootstrapModuleServiceProvider extends ServiceProvider
 {
-    protected $module = 'WebEd\Base\Pages';
-
     /**
      * Register the application services.
      *

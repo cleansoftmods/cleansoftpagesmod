@@ -2,6 +2,9 @@
 
 use WebEd\Base\Http\DataTables\AbstractDataTables;
 use WebEd\Base\Pages\Models\Page;
+use Yajra\Datatables\Engines\CollectionEngine;
+use Yajra\Datatables\Engines\EloquentEngine;
+use Yajra\Datatables\Engines\QueryBuilderEngine;
 
 class PagesListDataTable extends AbstractDataTables
 {
@@ -90,7 +93,7 @@ class PagesListDataTable extends AbstractDataTables
                 'placeholder' => trans('webed-core::datatables.search') . '...',
             ]))
             ->addFilter(4, form()->select('status', [
-                '' => trans('webed-core::datatables.all'),
+                '' => trans('webed-core::datatables.select') . '...',
                 'activated' => trans('webed-core::base.status.activated'),
                 'disabled' => trans('webed-core::base.status.disabled'),
             ], null, ['class' => 'form-control form-filter input-sm']));
@@ -106,7 +109,7 @@ class PagesListDataTable extends AbstractDataTables
     }
 
     /**
-     * @return $this
+     * @return CollectionEngine|EloquentEngine|QueryBuilderEngine|mixed
      */
     protected function fetchDataForAjax()
     {
@@ -116,7 +119,7 @@ class PagesListDataTable extends AbstractDataTables
                 return form()->customCheckbox([['id[]', $item->id]]);
             })
             ->editColumn('status', function ($item) {
-                return html()->label($item->status, $item->status);
+                return html()->label(trans('webed-core::base.status.' . $item->status), $item->status);
             })
             ->addColumn('viewID', function ($item) {
                 return $item->id;
@@ -128,7 +131,7 @@ class PagesListDataTable extends AbstractDataTables
                 $deleteLink = route('admin::pages.delete.delete', ['id' => $item->id]);
 
                 /*Buttons*/
-                $editBtn = link_to(route('admin::pages.edit.get', ['id' => $item->id]), 'Edit', ['class' => 'btn btn-sm btn-outline green']);
+                $editBtn = link_to(route('admin::pages.edit.get', ['id' => $item->id]), trans('webed-core::datatables.edit'), ['class' => 'btn btn-sm btn-outline green']);
                 $activeBtn = ($item->status != 'activated') ? form()->button(trans('webed-core::datatables.active'), [
                     'title' => trans('webed-core::datatables.active_this_item'),
                     'data-ajax' => $activeLink,

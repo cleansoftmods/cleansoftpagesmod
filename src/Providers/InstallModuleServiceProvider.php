@@ -6,7 +6,7 @@ use Illuminate\Database\Schema\Blueprint;
 
 class InstallModuleServiceProvider extends ServiceProvider
 {
-    protected $module = 'WebEd\Base\Pages';
+    protected $module = 'webed-pages';
 
     /**
      * Register the application services.
