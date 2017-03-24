@@ -31,8 +31,11 @@ class FilterPagesCriteria extends AbstractCriteria
       */
     public function apply($model, AbstractRepositoryContract $repository)
     {
-        return $model
-            ->where($this->condition)
-            ->orderBy($this->orderBy);
+        $model = $model
+            ->where($this->condition);
+        foreach ($this->orderBy as $key => $value) {
+            $model = $model->orderBy($key, $value);
+        }
+        return $model;
     }
 }

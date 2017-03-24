@@ -46,7 +46,7 @@ class BootstrapModuleServiceProvider extends ServiceProvider
         ]);
     }
 
-    private function registerMenu()
+    protected function registerMenu()
     {
         /**
          * Register menu widget
@@ -88,7 +88,7 @@ class BootstrapModuleServiceProvider extends ServiceProvider
         });
     }
 
-    private function registerSettings()
+    protected function registerSettings()
     {
         cms_settings()
             ->addSettingField('default_homepage', [
