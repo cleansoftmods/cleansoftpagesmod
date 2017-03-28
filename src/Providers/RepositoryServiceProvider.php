@@ -2,7 +2,7 @@
 
 use Illuminate\Support\ServiceProvider;
 use WebEd\Base\Pages\Models\Page;
-use WebEd\Base\Pages\Repositories\Contracts\PageContract;
+use WebEd\Base\Pages\Repositories\Contracts\PageRepositoryContract;
 use WebEd\Base\Pages\Repositories\PageRepository;
 use WebEd\Base\Pages\Repositories\PageRepositoryCacheDecorator;
 
@@ -15,7 +15,7 @@ class RepositoryServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind(PageContract::class, function () {
+        $this->app->bind(PageRepositoryContract::class, function () {
             $repository = new PageRepository(new Page());
 
             if (config('webed-caching.repository.enabled')) {

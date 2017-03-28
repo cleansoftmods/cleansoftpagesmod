@@ -4,9 +4,9 @@ use WebEd\Base\Caching\Services\Traits\Cacheable;
 use WebEd\Base\Repositories\Eloquent\EloquentBaseRepository;
 
 use WebEd\Base\Caching\Services\Contracts\CacheableContract;
-use WebEd\Base\Pages\Repositories\Contracts\PageContract;
+use WebEd\Base\Pages\Repositories\Contracts\PageRepositoryContract;
 
-class PageRepository extends EloquentBaseRepository implements PageContract, CacheableContract
+class PageRepository extends EloquentBaseRepository implements PageRepositoryContract, CacheableContract
 {
     use Cacheable;
 

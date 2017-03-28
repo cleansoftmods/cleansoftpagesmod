@@ -1,6 +1,6 @@
 <?php namespace WebEd\Base\Pages\Hook\Actions;
 
-use WebEd\Base\Pages\Repositories\Contracts\PageContract;
+use WebEd\Base\Pages\Repositories\Contracts\PageRepositoryContract;
 use WebEd\Base\Pages\Repositories\PageRepository;
 
 class RegisterDashboardStats
@@ -10,7 +10,7 @@ class RegisterDashboardStats
      */
     protected $repository;
 
-    public function __construct(PageContract $repository)
+    public function __construct(PageRepositoryContract $repository)
     {
         $this->repository = $repository;
     }

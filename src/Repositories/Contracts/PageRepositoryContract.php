@@ -1,6 +1,6 @@
 <?php namespace WebEd\Base\Pages\Repositories\Contracts;
 
-interface PageContract
+interface PageRepositoryContract
 {
     /**
      * @param $data

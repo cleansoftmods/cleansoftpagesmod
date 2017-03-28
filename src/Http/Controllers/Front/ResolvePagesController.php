@@ -1,15 +1,13 @@
 <?php namespace WebEd\Base\Pages\Http\Controllers\Front;
 
 use WebEd\Base\Http\Controllers\BaseFrontController;
-use WebEd\Base\Pages\Models\Contracts\PageModelContract;
-use WebEd\Base\Pages\Models\Page;
-use WebEd\Base\Pages\Repositories\Contracts\PageContract;
+use WebEd\Base\Pages\Repositories\Contracts\PageRepositoryContract;
 use WebEd\Base\Pages\Repositories\PageRepository;
 
 class ResolvePagesController extends BaseFrontController
 {
     /**
-     * @var PageContract|PageRepository
+     * @var PageRepositoryContract|PageRepository
      */
     protected $repository;
 
@@ -17,7 +15,7 @@ class ResolvePagesController extends BaseFrontController
      * SlugWithoutSuffixController constructor.
      * @param PageRepository $repository
      */
-    public function __construct(PageContract $repository)
+    public function __construct(PageRepositoryContract $repository)
     {
         parent::__construct();
 

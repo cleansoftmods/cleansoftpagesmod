@@ -5,7 +5,7 @@ use WebEd\Base\Http\Controllers\BaseAdminController;
 use WebEd\Base\Pages\Http\DataTables\PagesListDataTable;
 use WebEd\Base\Pages\Http\Requests\CreatePageRequest;
 use WebEd\Base\Pages\Http\Requests\UpdatePageRequest;
-use WebEd\Base\Pages\Repositories\Contracts\PageContract;
+use WebEd\Base\Pages\Repositories\Contracts\PageRepositoryContract;
 use Yajra\Datatables\Engines\BaseEngine;
 
 class PageController extends BaseAdminController
@@ -15,13 +15,17 @@ class PageController extends BaseAdminController
     /**
      * @param \WebEd\Base\Pages\Repositories\PageRepository $pageRepository
      */
-    public function __construct(PageContract $pageRepository)
+    public function __construct(PageRepositoryContract $pageRepository)
     {
         parent::__construct();
 
         $this->repository = $pageRepository;
 
-        $this->breadcrumbs->addLink(trans('webed-pages::base.page_title'), route('admin::pages.index.get'));
+        $this->middleware(function (Request $request, $next) {
+            $this->breadcrumbs->addLink(trans('webed-pages::base.page_title'), route('admin::pages.index.get'));
+
+            return $next($request);
+        });
 
         $this->getDashboardMenu($this->module);
     }
@@ -206,7 +210,7 @@ class PageController extends BaseAdminController
 
         if (!$item) {
             flash_messages()
-                ->addMessages(trans('webed-pages::base.form.create_page'), 'danger')
+                ->addMessages(trans('webed-pages::base.form.page_not_exists'), 'danger')
                 ->showMessagesOnSession();
 
             return redirect()->back();
