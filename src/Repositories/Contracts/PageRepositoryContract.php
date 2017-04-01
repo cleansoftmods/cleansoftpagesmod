@@ -1,23 +1,26 @@
 <?php namespace WebEd\Base\Pages\Repositories\Contracts;
 
+use WebEd\Base\Pages\Models\Page;
+
 interface PageRepositoryContract
 {
     /**
-     * @param $data
-     * @return array
+     * @param array $data
+     * @return int
      */
-    public function createPage($data);
+    public function createPage(array $data);
 
     /**
-     * @param $id
-     * @param $data
-     * @return array
+     * @param Page|int $id
+     * @param array $data
+     * @return int
      */
-    public function updatePage($id, $data);
+    public function updatePage($id, array $data);
 
     /**
-     * @param int|array $id
-     * @return mixed
+     * @param int|array $ids
+     * @param bool $force
+     * @return bool
      */
-    public function deletePage($id);
+    public function deletePage($ids, $force = false);
 }

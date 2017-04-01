@@ -1,36 +1,36 @@
 <?php namespace WebEd\Base\Pages\Repositories;
 
+use WebEd\Base\Pages\Models\Page;
 use WebEd\Base\Repositories\Eloquent\EloquentBaseRepositoryCacheDecorator;
 use WebEd\Base\Pages\Repositories\Contracts\PageRepositoryContract;
 
 class PageRepositoryCacheDecorator extends EloquentBaseRepositoryCacheDecorator implements PageRepositoryContract
 {
     /**
-     * @param $data
-     * @param array|null $dataTranslate
-     * @return array
+     * @param array $data
+     * @return int
      */
-    public function createPage($data, $dataTranslate = null)
+    public function createPage(array $data)
     {
         return $this->afterUpdate(__FUNCTION__, func_get_args());
     }
 
     /**
-     * @param $id
-     * @param $data
-     * @param array|null $dataTranslate
-     * @return array
+     * @param Page|int $id
+     * @param array $data
+     * @return int
      */
-    public function updatePage($id, $data, $dataTranslate = null)
+    public function updatePage($id, array $data)
     {
         return $this->afterUpdate(__FUNCTION__, func_get_args());
     }
 
     /**
-     * @param int|array $id
-     * @return array
+     * @param int|array $ids
+     * @param bool $force
+     * @return bool
      */
-    public function deletePage($id)
+    public function deletePage($ids, $force = false)
     {
         return $this->afterUpdate(__FUNCTION__, func_get_args());
     }

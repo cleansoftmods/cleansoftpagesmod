@@ -24,10 +24,10 @@ class PageController extends BaseAdminController
         $this->middleware(function (Request $request, $next) {
             $this->breadcrumbs->addLink(trans('webed-pages::base.page_title'), route('admin::pages.index.get'));
 
+            $this->getDashboardMenu($this->module);
+
             return $next($request);
         });
-
-        $this->getDashboardMenu($this->module);
     }
 
     /**
@@ -84,13 +84,16 @@ class PageController extends BaseAdminController
                     /**
                      * Delete pages
                      */
-                    $result = $this->deleteDelete($ids);
+                    $result = $this->repository->deletePage($ids);
+                    if ($result) {
+                        do_action(BASE_ACTION_AFTER_DELETE, WEBED_PAGES, $ids, $result);
+                    }
                     break;
                 case 'activated':
                 case 'disabled':
                     $result = $this->repository->updateMultiple($ids, [
                         'status' => $actionValue,
-                    ], true);
+                    ]);
                     break;
                 default:
                     $result = [
@@ -99,9 +102,8 @@ class PageController extends BaseAdminController
                     ];
                     break;
             }
-            $data['customActionMessage'] = $result['messages'];
-            $data['customActionStatus'] = $result['error'] ? 'danger' : 'success';
-
+            $data['customActionMessage'] = $result ? trans('webed-core::base.form.request_completed') : trans('webed-core::base.form.error_occurred');
+            $data['customActionStatus'] = !$result ? 'danger' : 'success';
         }
         return $data;
     }
@@ -118,7 +120,9 @@ class PageController extends BaseAdminController
             'status' => $status
         ];
         $result = $this->repository->updatePage($id, $data);
-        return response()->json($result, $result['response_code']);
+        $msg = $result ? trans('webed-core::base.form.request_completed') : trans('webed-core::base.form.error_occurred');
+        $code = $result ? \Constants::SUCCESS_NO_CONTENT_CODE : \Constants::ERROR_CODE;
+        return response()->json(response_with_messages($msg, !$result, $code), $code);
     }
 
     /**
@@ -136,8 +140,6 @@ class PageController extends BaseAdminController
         $this->setPageTitle(trans('webed-pages::base.form.create_page'));
         $this->breadcrumbs->addLink(trans('webed-pages::base.form.create_page'));
 
-        $this->dis['object'] = $this->repository->getModel();
-
         return do_filter(BASE_FILTER_CONTROLLER, $this, WEBED_PAGES, 'create.get')->viewAdmin('create');
     }
 
@@ -152,18 +154,19 @@ class PageController extends BaseAdminController
 
         do_action(BASE_ACTION_AFTER_CREATE, WEBED_PAGES, $result);
 
-        $msgType = $result['error'] ? 'danger' : 'success';
+        $msgType = !$result ? 'danger' : 'success';
+        $msg = $result ? trans('webed-core::base.form.request_completed') : trans('webed-core::base.form.error_occurred');
 
         flash_messages()
-            ->addMessages($result['messages'], $msgType)
+            ->addMessages($msg, $msgType)
             ->showMessagesOnSession();
 
-        if ($result['error']) {
+        if (!$result) {
             return redirect()->back()->withInput();
         }
 
         if ($this->request->has('_continue_edit')) {
-            return redirect()->to(route('admin::pages.edit.get', ['id' => $result['data']->id]));
+            return redirect()->to(route('admin::pages.edit.get', ['id' => $result]));
         }
 
         return redirect()->to(route('admin::pages.index.get'));
@@ -224,10 +227,11 @@ class PageController extends BaseAdminController
 
         do_action(BASE_ACTION_AFTER_UPDATE, WEBED_PAGES, $id, $result);
 
-        $msgType = $result['error'] ? 'danger' : 'success';
+        $msgType = !$result ? 'danger' : 'success';
+        $msg = $result ? trans('webed-core::base.form.request_completed') : trans('webed-core::base.form.error_occurred');
 
         flash_messages()
-            ->addMessages($result['messages'], $msgType)
+            ->addMessages($msg, $msgType)
             ->showMessagesOnSession();
 
         if ($this->request->has('_continue_edit')) {
@@ -249,9 +253,15 @@ class PageController extends BaseAdminController
 
         do_action(BASE_ACTION_AFTER_DELETE, WEBED_PAGES, $id, $result);
 
-        return response()->json($result, $result['response_code']);
+        $msg = $result ? trans('webed-core::base.form.request_completed') : trans('webed-core::base.form.error_occurred');
+        $code = $result ? \Constants::SUCCESS_NO_CONTENT_CODE : \Constants::ERROR_CODE;
+        return response()->json(response_with_messages($msg, !$result, $code), $code);
     }
 
+    /**
+     * @param Request $request
+     * @return array
+     */
     protected function parseDataUpdate(Request $request)
     {
         return [
