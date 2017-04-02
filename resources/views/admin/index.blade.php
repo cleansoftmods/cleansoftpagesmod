@@ -31,6 +31,6 @@
                 <!-- /.box-body -->
             </div>
         </div>
-        @php do_action(BASE_ACTION_META_BOXES, 'main', 'webed-pages.index') @endphp
+        @php do_action(BASE_ACTION_META_BOXES, 'main', WEBED_PAGES . '.index') @endphp
     </div>
 @endsection

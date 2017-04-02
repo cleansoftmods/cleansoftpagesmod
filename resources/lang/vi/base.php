@@ -15,6 +15,7 @@ return [
     ],
     'page_title' => 'Trang tĩnh',
     'all_pages' => 'Tất cả trang tĩnh',
+    'page' => 'Trang tĩnh',
     'settings' => [
         'default_homepage' => [
             'label' => 'Trang chủ mặc định',

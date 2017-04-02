@@ -28,6 +28,12 @@ class BootstrapModuleMiddleware
         $this->registerMenuDashboard();
         $this->registerSettings();
 
+        admin_quick_link()->register('page', [
+            'title' => trans('webed-pages::base.page'),
+            'url' => route('admin::pages.create.get'),
+            'icon' => 'icon-notebook',
+        ]);
+
         return $next($request);
     }
 
@@ -54,7 +60,7 @@ class BootstrapModuleMiddleware
         /**
          * Register menu widget
          */
-        \MenuManagement::registerWidget(trans('webed-pages::base.admin_menu.pages.title'), 'page', function () {
+        menus_management()->registerWidget(trans('webed-pages::base.admin_menu.pages.title'), 'page', function () {
             $repository = app(PageRepositoryContract::class)
                 ->pushCriteria(new FilterPagesCriteria([
                     'status' => 'activated'
@@ -75,7 +81,7 @@ class BootstrapModuleMiddleware
         /**
          * Register menu link type
          */
-        \MenuManagement::registerLinkType('page', function ($id) {
+        menus_management()->registerLinkType('page', function ($id) {
             $page = app(PageRepositoryContract::class)
                 ->findWhere([
                     'status' => 'activated',

@@ -15,6 +15,7 @@ return [
     ],
     'page_title' => 'CMS pages',
     'all_pages' => 'All pages',
+    'page' => 'Page',
     'settings' => [
         'default_homepage' => [
             'label' => 'Default homepage',
