@@ -11,7 +11,7 @@
 @section('js-init')
     <script type="text/javascript">
         $(document).ready(function () {
-            WebEd.ckeditor($('.js-ckeditor'));
+            WebEd.wysiwyg($('.js-ckeditor'));
         });
     </script>
 @endsection
