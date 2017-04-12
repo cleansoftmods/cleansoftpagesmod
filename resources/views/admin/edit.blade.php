@@ -36,7 +36,7 @@
                         </label>
                         <input required
                                type="text"
-                               name="title"
+                               name="page[title]"
                                class="form-control"
                                value="{{ $object->title or '' }}"
                                autocomplete="off">
@@ -46,7 +46,7 @@
                             <b>{{ trans('webed-core::base.form.slug') }}</b>
                         </label>
                         <input type="text"
-                               name="slug"
+                               name="page[slug]"
                                class="form-control"
                                value="{{ $object->slug or '' }}" autocomplete="off">
                     </div>
@@ -55,21 +55,21 @@
                             <label class="control-label">
                                 <b>{{ trans('webed-core::base.visit_page') }}&nbsp;</b>
                             </label>
-                            <a href="{{ route('front.web.resolve-pages.get', ['slug' => $object->slug]) }}" target="_blank">{{ route('front.web.resolve-pages.get', ['slug' => $object->slug]) }}</a>
+                            <a href="{{ get_page_link($object) }}" target="_blank">{{ get_page_link($object) }}</a>
                         </div>
                     @endif
                     <div class="form-group">
                         <label class="control-label">
                             <b>{{ trans('webed-core::base.form.content') }}</b>
                         </label>
-                        <textarea name="content"
+                        <textarea name="page[content]"
                                   class="form-control js-ckeditor">{!! $object->content or '' !!}</textarea>
                     </div>
                     <div class="form-group">
                         <label class="control-label">
                             <b>{{ trans('webed-core::base.form.keywords') }}</b>
                         </label>
-                        <input type="text" name="keywords"
+                        <input type="text" name="page[keywords]"
                                class="form-control js-tags-input"
                                value="{{ $object->keywords or '' }}" autocomplete="off">
                     </div>
@@ -77,7 +77,7 @@
                         <label class="control-label">
                             <b>{{ trans('webed-core::base.form.description') }}</b>
                         </label>
-                        <textarea name="description"
+                        <textarea name="page[description]"
                                   class="form-control"
                                   rows="5">{!! $object->description or '' !!}</textarea>
                     </div>
@@ -88,12 +88,12 @@
         <div class="column right">
             @php do_action(BASE_ACTION_META_BOXES, 'top-sidebar', WEBED_PAGES . '.edit', $object) @endphp
             @include('webed-core::admin._widgets.page-templates', [
-                'name' => 'page_template',
+                'name' => 'page[page_template]',
                 'templates' => get_templates('Page'),
                 'selected' => $object->page_template,
             ])
             @include('webed-core::admin._widgets.thumbnail', [
-                'name' => 'thumbnail',
+                'name' => 'page[thumbnail]',
                 'value' => $object->thumbnail ?: null
             ])
             <div class="box box-primary">
@@ -107,9 +107,9 @@
                 </div>
                 <div class="box-body">
                     <div class="form-group">
-                        <input type="text" name="order"
+                        <input type="text" name="page[order]"
                                class="form-control"
-                               value="{{ $object->order or '0' }}" autocomplete="off">
+                               value="{{ $object->order ?: 0 }}" autocomplete="off">
                     </div>
                 </div>
             </div>
@@ -128,7 +128,7 @@
                         <label class="control-label">
                             <b>{{ trans('webed-core::base.form.status') }}</b>
                         </label>
-                        {!! form()->select('status', [
+                        {!! form()->select('page[status]', [
                             'activated' => trans('webed-core::base.status.activated'),
                             'disabled' => trans('webed-core::base.status.disabled'),
                         ], $object->status, ['class' => 'form-control']) !!}

@@ -7,15 +7,15 @@ class CreatePageRequest extends Request
     public function rules()
     {
         return [
-            'page_template' => 'string|max:255|nullable',
-            'title' => 'string|max:255|required',
-            'slug' => 'string|max:255|nullable',
-            'description' => 'string|max:1000|nullable',
-            'content' => 'string|nullable',
-            'thumbnail' => 'string|max:255|nullable',
-            'keywords' => 'string|max:255|nullable',
-            'status' => 'string|required|in:activated,disabled',
-            'order' => 'integer|min:0',
+            'page.page_template' => 'string|max:255|nullable',
+            'page.title' => 'string|max:255|required',
+            'page.slug' => 'string|max:255|nullable|unique:pages',
+            'page.description' => 'string|max:1000|nullable',
+            'page.content' => 'string|nullable',
+            'page.thumbnail' => 'string|max:255|nullable',
+            'page.keywords' => 'string|max:255|nullable',
+            'page.status' => 'string|required|in:activated,disabled',
+            'page.order' => 'integer|min:0',
         ];
     }
 }

@@ -35,9 +35,9 @@
                             <b>{{ trans('webed-core::base.form.title') }}</b>
 
                         </label>
-                        <input required type="text" name="title"
+                        <input required type="text" name="page[title]"
                                class="form-control"
-                               value="{{ old('title') }}"
+                               value="{{ old('page.title') }}"
                                autocomplete="off">
                     </div>
                     <div class="form-group">
@@ -45,32 +45,32 @@
                             <b>{{ trans('webed-core::base.form.slug') }}</b>
 
                         </label>
-                        <input type="text" name="slug"
+                        <input type="text" name="page[slug]"
                                class="form-control"
-                               value="{{ old('slug') }}" autocomplete="off">
+                               value="{{ old('page.slug') }}" autocomplete="off">
                     </div>
                     <div class="form-group">
                         <label class="control-label">
                             <b>{{ trans('webed-core::base.form.content') }}</b>
                         </label>
-                        <textarea name="content"
-                                  class="form-control js-ckeditor">{!! old('content') !!}</textarea>
+                        <textarea name="page[content]"
+                                  class="form-control js-ckeditor">{!! old('page.content') !!}</textarea>
                     </div>
                     <div class="form-group">
                         <label class="control-label">
                             <b>{{ trans('webed-core::base.form.keywords') }}</b>
                         </label>
-                        <input type="text" name="keywords"
+                        <input type="text" name="page[keywords]"
                                class="form-control js-tags-input"
-                               value="{{ old('keywords') }}" autocomplete="off">
+                               value="{{ old('page.keywords') }}" autocomplete="off">
                     </div>
                     <div class="form-group">
                         <label class="control-label">
                             <b>{{ trans('webed-core::base.form.description') }}</b>
                         </label>
-                        <textarea name="description"
+                        <textarea name="page[description]"
                                   class="form-control"
-                                  rows="5">{{ old('description') }}</textarea>
+                                  rows="5">{{ old('page.description') }}</textarea>
                     </div>
                 </div>
             </div>
@@ -79,13 +79,13 @@
         <div class="column right">
             @php do_action(BASE_ACTION_META_BOXES, 'top-sidebar', WEBED_PAGES . '.create', null) @endphp
             @include('webed-core::admin._widgets.page-templates', [
-                'name' => 'page_template',
+                'name' => 'page[page_template]',
                 'templates' => get_templates('Page'),
-                'selected' => old('page_template'),
+                'selected' => old('page.page_template'),
             ])
             @include('webed-core::admin._widgets.thumbnail', [
-                'name' => 'thumbnail',
-                'value' => old('thumbnail')
+                'name' => 'page[thumbnail]',
+                'value' => old('page.thumbnail')
             ])
             <div class="box box-primary">
                 <div class="box-header with-border">
@@ -98,9 +98,9 @@
                 </div>
                 <div class="box-body">
                     <div class="form-group">
-                        <input type="text" name="order"
+                        <input type="text" name="page[order]"
                                class="form-control"
-                               value="{{ old('order', 0) }}" autocomplete="off">
+                               value="{{ old('page.order', 0) }}" autocomplete="off">
                     </div>
                 </div>
             </div>
@@ -119,10 +119,10 @@
                         <label class="control-label">
                             <b>{{ trans('webed-core::base.form.status') }}</b>
                         </label>
-                        {!! form()->select('status', [
+                        {!! form()->select('page[status]', [
                            'activated' => trans('webed-core::base.status.activated'),
                             'disabled' => trans('webed-core::base.status.disabled'),
-                        ], old('status'), ['class' => 'form-control']) !!}
+                        ], old('page.status'), ['class' => 'form-control']) !!}
                     </div>
                     <div class="text-right">
                         <button class="btn btn-primary" type="submit">

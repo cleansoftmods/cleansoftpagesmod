@@ -84,10 +84,11 @@ class PageController extends BaseAdminController
                     /**
                      * Delete pages
                      */
+                    $ids = do_filter(BASE_FILTER_BEFORE_DELETE, $ids, WEBED_PAGES);
+
                     $result = $this->repository->deletePage($ids);
-                    if ($result) {
-                        do_action(BASE_ACTION_AFTER_DELETE, WEBED_PAGES, $ids, $result);
-                    }
+
+                    do_action(BASE_ACTION_AFTER_DELETE, WEBED_PAGES, $ids, $result);
                     break;
                 case 'activated':
                 case 'disabled':
@@ -96,9 +97,9 @@ class PageController extends BaseAdminController
                     ]);
                     break;
                 default:
-                    $result = [
-                        'messages' => trans('webed-base::errors.' . \Constants::METHOD_NOT_ALLOWED . '.message'),
-                        'error' => true
+                    return [
+                        'customActionMessage' => trans('webed-core::errors.' . \Constants::METHOD_NOT_ALLOWED . '.message'),
+                        'customActionStatus' => 'danger'
                     ];
                     break;
             }
@@ -147,7 +148,7 @@ class PageController extends BaseAdminController
     {
         do_action(BASE_ACTION_BEFORE_CREATE, WEBED_PAGES, 'create.post');
 
-        $data = $this->parseDataUpdate($request);
+        $data = $this->parseData($request);
         $data['created_by'] = $this->loggedInUser->id;
 
         $result = $this->repository->createPage($data);
@@ -221,7 +222,8 @@ class PageController extends BaseAdminController
 
         $item = do_filter(BASE_FILTER_BEFORE_UPDATE, $item, WEBED_PAGES, 'edit.post');
 
-        $data = $this->parseDataUpdate($request);
+        $data = $this->parseData($request);
+        $data['updated_by'] = $this->loggedInUser->id;
 
         $result = $this->repository->updatePage($item, $data);
 
@@ -262,19 +264,12 @@ class PageController extends BaseAdminController
      * @param Request $request
      * @return array
      */
-    protected function parseDataUpdate(Request $request)
+    protected function parseData(Request $request)
     {
-        return [
-            'page_template' => $request->get('page_template', null),
-            'status' => $request->get('status'),
-            'title' => $request->get('title'),
-            'slug' => ($request->get('slug') ? str_slug($request->get('slug')) : str_slug($request->get('title'))),
-            'keywords' => $request->get('keywords'),
-            'description' => $request->get('description'),
-            'content' => $request->get('content'),
-            'thumbnail' => $request->get('thumbnail'),
-            'updated_by' => $this->loggedInUser->id,
-            'order' => $request->get('order'),
-        ];
+        $data = $request->get('page', []);
+        if (!$data['slug']) {
+            $data['slug'] = str_slug($data['title']);
+        }
+        return $data;
     }
 }
