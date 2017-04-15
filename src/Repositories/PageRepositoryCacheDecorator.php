@@ -34,4 +34,13 @@ class PageRepositoryCacheDecorator extends EloquentBaseRepositoryCacheDecorator 
     {
         return $this->afterUpdate(__FUNCTION__, func_get_args());
     }
+
+    /**
+     * @param array $params
+     * @return mixed
+     */
+    public function getPages(array $params)
+    {
+        return $this->beforeGet(__FUNCTION__, func_get_args());
+    }
 }

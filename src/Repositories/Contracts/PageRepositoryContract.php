@@ -23,4 +23,10 @@ interface PageRepositoryContract
      * @return bool
      */
     public function deletePage($ids, $force = false);
+
+    /**
+     * @param array $params
+     * @return mixed
+     */
+    public function getPages(array $params);
 }
