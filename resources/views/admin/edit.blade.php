@@ -83,10 +83,10 @@
                     </div>
                 </div>
             </div>
-            @php do_action(BASE_ACTION_META_BOXES, 'main', WEBED_PAGES . '.edit', $object) @endphp
+            @php do_action(BASE_ACTION_META_BOXES, 'main', WEBED_PAGES, $object) @endphp
         </div>
         <div class="column right">
-            @php do_action(BASE_ACTION_META_BOXES, 'top-sidebar', WEBED_PAGES . '.edit', $object) @endphp
+            @php do_action(BASE_ACTION_META_BOXES, 'top-sidebar', WEBED_PAGES, $object) @endphp
             @include('webed-core::admin._widgets.page-templates', [
                 'name' => 'page[page_template]',
                 'templates' => get_templates('Page'),
@@ -113,7 +113,7 @@
                     </div>
                 </div>
             </div>
-            @php do_action(BASE_ACTION_META_BOXES, 'bottom-sidebar', WEBED_PAGES . '.edit', $object) @endphp
+            @php do_action(BASE_ACTION_META_BOXES, 'bottom-sidebar', WEBED_PAGES, $object) @endphp
             <div class="box box-primary">
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ trans('webed-core::base.form.publish') }}</h3>
