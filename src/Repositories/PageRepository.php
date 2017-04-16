@@ -80,7 +80,7 @@ class PageRepository extends EloquentBaseRepository implements PageRepositoryCon
         }
 
         if ($params['paginate']['per_page']) {
-            return $model->paginate($params['paginate']['per_page'], ['*'], 'page', $params['paginate']['paged']);
+            return $model->paginate($params['paginate']['per_page'], ['*'], 'page', $params['paginate']['current_paged']);
         }
 
         return $model->get();
