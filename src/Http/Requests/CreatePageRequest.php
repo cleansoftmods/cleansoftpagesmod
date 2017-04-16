@@ -9,7 +9,7 @@ class CreatePageRequest extends Request
         return [
             'page.page_template' => 'string|max:255|nullable',
             'page.title' => 'string|max:255|required',
-            'page.slug' => 'string|max:255|nullable|unique:pages',
+            'page.slug' => 'string|max:255|nullable|unique:pages,slug',
             'page.description' => 'string|max:1000|nullable',
             'page.content' => 'string|nullable',
             'page.thumbnail' => 'string|max:255|nullable',
