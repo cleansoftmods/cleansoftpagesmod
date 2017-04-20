@@ -129,7 +129,7 @@ class BootstrapModuleMiddleware
                 return [
                     'default_homepage',
                     $pagesArr,
-                    get_settings('default_homepage'),
+                    get_setting('default_homepage'),
                     ['class' => 'form-control']
                 ];
             });

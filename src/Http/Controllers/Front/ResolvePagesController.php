@@ -39,7 +39,7 @@ class ResolvePagesController extends BaseFrontController
         if(!$slug) {
             $page = $this->repository
                 ->findWhere([
-                    'id' => do_filter('front.default-homepage.get', get_settings('default_homepage')),
+                    'id' => do_filter('front.default-homepage.get', get_setting('default_homepage')),
                     'status' => 'activated'
                 ]);
         } else {
