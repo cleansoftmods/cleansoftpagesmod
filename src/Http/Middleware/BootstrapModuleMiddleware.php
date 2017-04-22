@@ -22,7 +22,7 @@ class BootstrapModuleMiddleware
      */
     public function handle($request, Closure $next, ...$params)
     {
-        \AdminBar::registerLink('Page', route('admin::pages.create.get'), 'add-new');
+        admin_bar()->registerLink('Page', route('admin::pages.create.get'), 'add-new');
 
         $this->registerMenu();
         $this->registerMenuDashboard();
@@ -42,7 +42,7 @@ class BootstrapModuleMiddleware
         /**
          * Register to dashboard menu
          */
-        \DashboardMenu::registerItem([
+        dashboard_menu()->registerItem([
             'id' => 'webed-pages',
             'priority' => 1,
             'parent_id' => null,

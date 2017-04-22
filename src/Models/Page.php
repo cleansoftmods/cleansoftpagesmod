@@ -37,7 +37,7 @@ class Page extends BaseModel implements PageModelContract
      */
     public function getContentAttribute($value)
     {
-        if (!is_in_dashboard()) {
+        if (!is_admin_panel()) {
             return do_shortcode($value);
         }
         return $value;

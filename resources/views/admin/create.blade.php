@@ -11,7 +11,7 @@
 @section('js-init')
     <script type="text/javascript">
         $(document).ready(function () {
-            WebEd.wysiwyg($('.js-ckeditor'));
+            WebEd.wysiwyg($('.js-wysiwyg'));
         });
     </script>
 @endsection
@@ -54,7 +54,7 @@
                             <b>{{ trans('webed-core::base.form.content') }}</b>
                         </label>
                         <textarea name="page[content]"
-                                  class="form-control js-ckeditor">{!! old('page.content') !!}</textarea>
+                                  class="form-control js-wysiwyg">{!! old('page.content') !!}</textarea>
                     </div>
                     <div class="form-group">
                         <label class="control-label">
@@ -69,24 +69,34 @@
                             <b>{{ trans('webed-core::base.form.description') }}</b>
                         </label>
                         <textarea name="page[description]"
-                                  class="form-control"
-                                  rows="5">{{ old('page.description') }}</textarea>
+                                  class="form-control js-wysiwyg"
+                                  data-toolbar="basic"
+                                  data-height="200px"
+                                  rows="5">{!! old('page.description') !!}</textarea>
                     </div>
                 </div>
             </div>
             @php do_action(BASE_ACTION_META_BOXES, 'main', WEBED_PAGES, null) @endphp
         </div>
         <div class="column right">
+            @include('webed-core::admin._components.form-actions')
             @php do_action(BASE_ACTION_META_BOXES, 'top-sidebar', WEBED_PAGES, null) @endphp
-            @include('webed-core::admin._widgets.page-templates', [
-                'name' => 'page[page_template]',
-                'templates' => get_templates('Page'),
-                'selected' => old('page.page_template'),
-            ])
-            @include('webed-core::admin._widgets.thumbnail', [
-                'name' => 'page[thumbnail]',
-                'value' => old('page.thumbnail')
-            ])
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ trans('webed-core::base.form.status') }}</h3>
+                    <div class="box-tools">
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                            <i class="fa fa-minus"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="box-body">
+                    {!! form()->select('page[status]', [
+                       'activated' => trans('webed-core::base.status.activated'),
+                        'disabled' => trans('webed-core::base.status.disabled'),
+                    ], old('page.status'), ['class' => 'form-control']) !!}
+                </div>
+            </div>
             <div class="box box-primary">
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ trans('webed-core::base.form.order') }}</h3>
@@ -97,46 +107,21 @@
                     </div>
                 </div>
                 <div class="box-body">
-                    <div class="form-group">
-                        <input type="text" name="page[order]"
-                               class="form-control"
-                               value="{{ old('page.order', 0) }}" autocomplete="off">
-                    </div>
+                    <input type="text" name="page[order]"
+                           class="form-control"
+                           value="{{ old('page.order', 0) }}" autocomplete="off">
                 </div>
             </div>
+            @include('webed-core::admin._widgets.page-templates', [
+                'name' => 'page[page_template]',
+                'templates' => get_templates('Page'),
+                'selected' => old('page.page_template'),
+            ])
+            @include('webed-core::admin._widgets.thumbnail', [
+                'name' => 'page[thumbnail]',
+                'value' => old('page.thumbnail')
+            ])
             @php do_action(BASE_ACTION_META_BOXES, 'bottom-sidebar', WEBED_PAGES, null) @endphp
-            <div class="box box-primary">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ trans('webed-core::base.form.publish') }}</h3>
-                    <div class="box-tools">
-                        <button type="button" class="btn btn-box-tool" data-widget="collapse">
-                            <i class="fa fa-minus"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="box-body">
-                    <div class="form-group">
-                        <label class="control-label">
-                            <b>{{ trans('webed-core::base.form.status') }}</b>
-                        </label>
-                        {!! form()->select('page[status]', [
-                           'activated' => trans('webed-core::base.status.activated'),
-                            'disabled' => trans('webed-core::base.status.disabled'),
-                        ], old('page.status'), ['class' => 'form-control']) !!}
-                    </div>
-                    <div class="text-right">
-                        <button class="btn btn-primary" type="submit">
-                            <i class="fa fa-check"></i> {{ trans('webed-core::base.form.save') }}
-                        </button>
-                        <button class="btn btn-success"
-                                type="submit"
-                                name="_continue_edit"
-                                value="1">
-                            <i class="fa fa-check"></i> {{ trans('webed-core::base.form.save_and_continue') }}
-                        </button>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
     {!! Form::close() !!}

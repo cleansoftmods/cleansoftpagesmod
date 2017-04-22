@@ -72,7 +72,7 @@ class ResolvePagesController extends BaseFrontController
             ->metaKeywords($page->keywords)
             ->setModelObject($page);
 
-        \AdminBar::registerLink('Edit this page', route('admin::pages.edit.get', ['id' => $page->id]));
+        admin_bar()->registerLink('Edit this page', route('admin::pages.edit.get', ['id' => $page->id]));
 
         $this->setPageTitle($page->title);
 
