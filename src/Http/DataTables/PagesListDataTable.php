@@ -121,6 +121,9 @@ class PagesListDataTable extends AbstractDataTables
             ->editColumn('status', function ($item) {
                 return html()->label(trans('webed-core::base.status.' . $item->status), $item->status);
             })
+            ->editColumn('page_template', function ($item) {
+                return config('webed-templates.page.' . $item->page_template);
+            })
             ->addColumn('viewID', function ($item) {
                 return $item->id;
             })

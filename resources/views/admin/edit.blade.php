@@ -123,7 +123,7 @@
             </div>
             @include('webed-core::admin._widgets.page-templates', [
                 'name' => 'page[page_template]',
-                'templates' => get_templates('Page'),
+                'templates' => get_templates('page'),
                 'selected' => $object->page_template,
             ])
             @include('webed-core::admin._widgets.thumbnail', [
