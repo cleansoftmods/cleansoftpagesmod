@@ -1,16 +1,11 @@
 <?php namespace WebEd\Base\Pages\Repositories;
 
-use WebEd\Base\Caching\Services\Traits\Cacheable;
 use WebEd\Base\Pages\Models\Page;
 use WebEd\Base\Repositories\Eloquent\EloquentBaseRepository;
-
-use WebEd\Base\Caching\Services\Contracts\CacheableContract;
 use WebEd\Base\Pages\Repositories\Contracts\PageRepositoryContract;
 
-class PageRepository extends EloquentBaseRepository implements PageRepositoryContract, CacheableContract
+class PageRepository extends EloquentBaseRepository implements PageRepositoryContract
 {
-    use Cacheable;
-
     /**
      * @param array $data
      * @return int
