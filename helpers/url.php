@@ -1,15 +1,15 @@
 <?php
 
-use WebEd\Base\Pages\Models\Contracts\PageModelContract;
 use WebEd\Base\Pages\Models\Page;
 
 if (!function_exists('get_page_link')) {
     /**
-     * @param Page $page
+     * @param string|Page $page
      * @return string
      */
     function get_page_link($page)
     {
-        return route('front.web.resolve-pages.get', ['slug' => $page->slug]);
+        $slug = is_string($page) ? $page : $page->slug;
+        return route('front.web.resolve-pages.get', ['slug' => $slug]);
     }
 }

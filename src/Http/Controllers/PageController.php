@@ -22,7 +22,7 @@ class PageController extends BaseAdminController
         $this->repository = $pageRepository;
 
         $this->middleware(function (Request $request, $next) {
-            $this->breadcrumbs->addLink(trans('webed-pages::base.page_title'), route('admin::pages.index.get'));
+            $this->breadcrumbs->addLink(trans($this->module . '::base.page_title'), route('admin::pages.index.get'));
 
             $this->getDashboardMenu($this->module);
 
@@ -37,7 +37,7 @@ class PageController extends BaseAdminController
      */
     public function getIndex(PagesListDataTable $pagesListDataTable)
     {
-        $this->setPageTitle(trans('webed-pages::base.page_title'));
+        $this->setPageTitle(trans($this->module . '::base.page_title'));
 
         $this->dis['dataTable'] = $pagesListDataTable->run();
 
@@ -138,8 +138,8 @@ class PageController extends BaseAdminController
                 'jquery-ckeditor'
             ]);
 
-        $this->setPageTitle(trans('webed-pages::base.form.create_page'));
-        $this->breadcrumbs->addLink(trans('webed-pages::base.form.create_page'));
+        $this->setPageTitle(trans($this->module . '::base.form.create_page'));
+        $this->breadcrumbs->addLink(trans($this->module . '::base.form.create_page'));
 
         return do_filter(BASE_FILTER_CONTROLLER, $this, WEBED_PAGES, 'create.get')->viewAdmin('create');
     }
@@ -183,7 +183,7 @@ class PageController extends BaseAdminController
 
         if (!$item) {
             flash_messages()
-                ->addMessages(trans('webed-pages::base.form.page_not_exists'), 'danger')
+                ->addMessages(trans($this->module . '::base.form.page_not_exists'), 'danger')
                 ->showMessagesOnSession();
 
             return redirect()->back();
@@ -196,8 +196,8 @@ class PageController extends BaseAdminController
                 'jquery-ckeditor'
             ]);
 
-        $this->setPageTitle(trans('webed-pages::base.form.edit_page') . ' #' . $item->id);
-        $this->breadcrumbs->addLink(trans('webed-pages::base.form.edit_page'));
+        $this->setPageTitle(trans($this->module . '::base.form.edit_page') . ' #' . $item->id);
+        $this->breadcrumbs->addLink(trans($this->module . '::base.form.edit_page'));
 
         $this->dis['object'] = $item;
 
@@ -214,7 +214,7 @@ class PageController extends BaseAdminController
 
         if (!$item) {
             flash_messages()
-                ->addMessages(trans('webed-pages::base.form.page_not_exists'), 'danger')
+                ->addMessages(trans($this->module . '::base.form.page_not_exists'), 'danger')
                 ->showMessagesOnSession();
 
             return redirect()->back();
