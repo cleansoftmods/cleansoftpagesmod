@@ -13,10 +13,10 @@ return [
                         'as' => 'front.web.resolve-pages.get',
                         'uses' => 'WebEd\Base\Pages\Http\Controllers\Front\ResolvePagesController@handle',
                         'where' => [
-                            'slug' => '[-A-Za-z0-9]+'
-                        ]
-                    ]
-                ]
+                            'slug' => '[-A-Za-z0-9]+',
+                        ],
+                    ],
+                ],
             ],
         ],
         'api' => [
