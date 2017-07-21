@@ -79,6 +79,8 @@ class PagesListDataTable extends AbstractDataTables
     {
         $this->setAjaxUrl(route('admin::pages.index.post'), 'POST');
 
+        $templates = ['' => trans('webed-core::datatables.select') . '...',] + get_templates('page');
+
         $this
             ->addFilter(1, form()->text('id', '', [
                 'class' => 'form-control form-filter input-sm',
@@ -88,7 +90,7 @@ class PagesListDataTable extends AbstractDataTables
                 'class' => 'form-control form-filter input-sm',
                 'placeholder' => trans('webed-core::datatables.search') . '...',
             ]))
-            ->addFilter(3, form()->text('page_template', '', [
+            ->addFilter(3, form()->select('page_template', $templates, null, [
                 'class' => 'form-control form-filter input-sm',
                 'placeholder' => trans('webed-core::datatables.search') . '...',
             ]))
@@ -104,8 +106,6 @@ class PagesListDataTable extends AbstractDataTables
             'activated' => trans('webed-core::datatables.active_these_items'),
             'disabled' => trans('webed-core::datatables.disable_these_items'),
         ]);
-
-        return $this->view();
     }
 
     /**
