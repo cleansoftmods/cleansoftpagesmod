@@ -92,7 +92,6 @@ class PagesListDataTable extends AbstractDataTables
             ]))
             ->addFilter(3, form()->select('page_template', $templates, null, [
                 'class' => 'form-control form-filter input-sm',
-                'placeholder' => trans('webed-core::datatables.search') . '...',
             ]))
             ->addFilter(4, form()->select('status', [
                 '' => trans('webed-core::datatables.select') . '...',
