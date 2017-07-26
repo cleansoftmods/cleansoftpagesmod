@@ -105,6 +105,8 @@ class PagesListDataTable extends AbstractDataTables
             'activated' => trans('webed-core::datatables.active_these_items'),
             'disabled' => trans('webed-core::datatables.disable_these_items'),
         ]);
+
+        return $this->view();
     }
 
     /**
