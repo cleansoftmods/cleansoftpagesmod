@@ -30,16 +30,4 @@ class Page extends BaseModel implements PageModelContract
     {
         return $this->belongsTo(User::class, 'updated_by');
     }
-
-    /**
-     * @param $value
-     * @return string
-     */
-    public function getContentAttribute($value)
-    {
-        if (!is_admin_panel()) {
-            return do_shortcode($value);
-        }
-        return $value;
-    }
 }
