@@ -1,6 +1,7 @@
 <?php namespace WebEd\Base\Pages\Http\DataTables;
 
 use WebEd\Base\Http\DataTables\AbstractDataTables;
+use WebEd\Base\Models\Contracts\BaseModelContract;
 use WebEd\Base\Pages\Models\Page;
 use Yajra\Datatables\Engines\CollectionEngine;
 use Yajra\Datatables\Engines\EloquentEngine;
@@ -9,13 +10,18 @@ use Yajra\Datatables\Engines\QueryBuilderEngine;
 class PagesListDataTable extends AbstractDataTables
 {
     /**
-     * @var Page
+     * @var Page|BaseModelContract
      */
     protected $model;
 
+    /**
+     * @var string
+     */
+    protected $screenName = WEBED_PAGES;
+
     public function __construct()
     {
-        $this->model = Page::select('id', 'page_template', 'status', 'title', 'order', 'created_at');
+        $this->model = do_filter(FRONT_FILTER_DATA_TABLES_MODEL, Page::select('id', 'page_template', 'status', 'title', 'order', 'created_at'), $this->screenName);
     }
 
     /**

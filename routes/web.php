@@ -46,11 +46,13 @@ Route::group(['prefix' => $adminRoute . '/pages', 'namespace' => $namespace], fu
 /**
  * Front site
  */
-foreach (config('webed-pages.custom_route_locations.web', []) as $file) {
-    require $file;
-}
-foreach (config('webed-pages.public_routes.web', []) as $method => $routeInfo) {
-    foreach ($routeInfo as $item) {
-        Route::$method($item[0], $item[1]);
+Route::group(do_filter(BASE_FILTER_PUBLIC_ROUTE, [], WEBED_PAGES), function () {
+    foreach (config('webed-pages.custom_route_locations.web', []) as $file) {
+        require $file;
     }
-}
+    foreach (config('webed-pages.public_routes.web', []) as $method => $routeInfo) {
+        foreach ($routeInfo as $item) {
+            Route::$method($item[0], $item[1]);
+        }
+    }
+});

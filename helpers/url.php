@@ -5,11 +5,18 @@ use WebEd\Base\Pages\Models\Page;
 if (!function_exists('get_page_link')) {
     /**
      * @param string|Page $page
+     * @param array $queryString
      * @return string
      */
-    function get_page_link($page)
+    function get_page_link($page, array $queryString = [])
     {
-        $slug = is_string($page) ? $page : $page->slug;
-        return route('front.web.resolve-pages.get', ['slug' => $slug]);
+        if (is_string($page)) {
+            $slug = $page;
+        } elseif (is_object($page)) {
+            $slug = $page->slug;
+        } else {
+            $slug = null;
+        }
+        return route('front.web.resolve-pages.get', array_merge($queryString, ['slug' => $slug]));
     }
 }
