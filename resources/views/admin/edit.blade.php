@@ -17,7 +17,7 @@
 @endsection
 
 @section('content')
-    {!! Form::open(['class' => 'js-validate-form']) !!}
+    {!! form()->open(['class' => 'js-validate-form', 'url' => request()->fullUrl()]) !!}
     <div class="layout-2columns sidebar-right">
         <div class="column main">
             <div class="box box-primary">
@@ -51,7 +51,7 @@
                                value="{{ $object->slug or '' }}" autocomplete="off">
                     </div>
                     @if($object->slug)
-                        <div class="form-group">
+                        <div class="form-group" id="url_generated">
                             <label class="control-label">
                                 <b>{{ trans('webed-core::base.visit_page') }}&nbsp;</b>
                             </label>

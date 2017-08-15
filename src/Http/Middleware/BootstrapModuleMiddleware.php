@@ -62,13 +62,18 @@ class BootstrapModuleMiddleware
          */
         menus_management()->registerWidget(trans('webed-pages::base.admin_menu.pages.title'), 'page', function () {
             $repository = app(PageRepositoryContract::class)
-                ->pushCriteria(new FilterPagesCriteria([
-                    'status' => 'activated'
-                ], [
-                    'order' => 'ASC'
-                ]))
-                ->get();
+                ->advancedGet([
+                    'condition' => [
+                        'status' => 'activated',
+                    ],
+                    'order_by' => [
+                        'order' => 'ASC'
+                    ],
+                    'select' => ['id', 'title'],
+                ]);
+
             $pages = [];
+
             foreach ($repository as $page) {
                 $pages[] = [
                     'id' => $page->id,

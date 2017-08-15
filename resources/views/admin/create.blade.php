@@ -17,7 +17,7 @@
 @endsection
 
 @section('content')
-    {!! Form::open(['class' => 'js-validate-form']) !!}
+    {!! form()->open(['class' => 'js-validate-form', 'url' => request()->fullUrl()]) !!}
     <div class="layout-2columns sidebar-right">
         <div class="column main">
             <div class="box box-primary">

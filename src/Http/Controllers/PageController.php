@@ -181,6 +181,8 @@ class PageController extends BaseAdminController
     {
         $item = $this->repository->find($id);
 
+        $item = do_filter(BASE_FILTER_BEFORE_UPDATE, $item, WEBED_PAGES, 'edit.get');
+
         if (!$item) {
             flash_messages()
                 ->addMessages(trans($this->module . '::base.form.page_not_exists'), 'danger')
@@ -188,8 +190,6 @@ class PageController extends BaseAdminController
 
             return redirect()->back();
         }
-
-        $item = do_filter(BASE_FILTER_BEFORE_UPDATE, $item, WEBED_PAGES, 'edit.get');
 
         $this->assets
             ->addJavascripts([
