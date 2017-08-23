@@ -34,6 +34,10 @@ class BootstrapModuleMiddleware
             'icon' => 'icon-notebook',
         ]);
 
+        add_new_template([
+            'homepage' => 'Homepage',
+        ], WEBED_PAGES);
+
         return $next($request);
     }
 

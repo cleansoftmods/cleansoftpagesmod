@@ -92,8 +92,8 @@
                 </div>
                 <div class="box-body">
                     {!! form()->select('page[status]', [
-                       'activated' => trans('webed-core::base.status.activated'),
-                        'disabled' => trans('webed-core::base.status.disabled'),
+                       1 => trans('webed-core::base.status.activated'),
+                       0 => trans('webed-core::base.status.disabled'),
                     ], old('page.status'), ['class' => 'form-control']) !!}
                 </div>
             </div>
@@ -114,7 +114,7 @@
             </div>
             @include('webed-core::admin._widgets.page-templates', [
                 'name' => 'page[page_template]',
-                'templates' => get_templates('page'),
+                'templates' => get_templates(WEBED_PAGES),
                 'selected' => old('page.page_template'),
             ])
             @include('webed-core::admin._widgets.thumbnail', [

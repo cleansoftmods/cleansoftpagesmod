@@ -122,7 +122,8 @@ class PagesListDataTable extends AbstractDataTables
                 return form()->customCheckbox([['id[]', $item->id]]);
             })
             ->editColumn('status', function ($item) {
-                return html()->label(trans('webed-core::base.status.' . $item->status), $item->status);
+                $status = $item->status ? 'activated' : 'disabled';
+                return html()->label(trans('webed-core::base.status.' . $status), $status);
             })
             ->editColumn('page_template', function ($item) {
                 return config('webed-templates.page.' . $item->page_template);
@@ -132,13 +133,15 @@ class PagesListDataTable extends AbstractDataTables
             })
             ->addColumn('actions', function ($item) {
                 /*Edit link*/
-                $activeLink = route('admin::pages.update-status.post', ['id' => $item->id, 'status' => 'activated']);
-                $disableLink = route('admin::pages.update-status.post', ['id' => $item->id, 'status' => 'disabled']);
+                $activeLink = route('admin::pages.update-status.post', ['id' => $item->id, 'status' => 1]);
+                $disableLink = route('admin::pages.update-status.post', ['id' => $item->id, 'status' => 0]);
                 $deleteLink = route('admin::pages.delete.delete', ['id' => $item->id]);
+
+                $status = $item->status ? 'activated' : 'disabled';
 
                 /*Buttons*/
                 $editBtn = link_to(route('admin::pages.edit.get', ['id' => $item->id]), trans('webed-core::datatables.edit'), ['class' => 'btn btn-sm btn-outline green']);
-                $activeBtn = ($item->status != 'activated') ? form()->button(trans('webed-core::datatables.active'), [
+                $activeBtn = ($status != 'activated') ? form()->button(trans('webed-core::datatables.active'), [
                     'title' => trans('webed-core::datatables.active_this_item'),
                     'data-ajax' => $activeLink,
                     'data-method' => 'POST',
@@ -146,7 +149,7 @@ class PagesListDataTable extends AbstractDataTables
                     'class' => 'btn btn-outline blue btn-sm ajax-link',
                     'type' => 'button',
                 ]) : '';
-                $disableBtn = ($item->status != 'disabled') ? form()->button(trans('webed-core::datatables.disable'), [
+                $disableBtn = ($status != 'disabled') ? form()->button(trans('webed-core::datatables.disable'), [
                     'title' => trans('webed-core::datatables.disable_this_item'),
                     'data-ajax' => $disableLink,
                     'data-method' => 'POST',

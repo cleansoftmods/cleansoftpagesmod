@@ -9,12 +9,12 @@ class UpdatePageRequest extends Request
         return [
             'page.page_template' => 'string|max:255|nullable',
             'page.title' => 'string|max:255|required',
-            'page.slug' => 'string|max:255|nullable|unique:pages,slug,' . request()->route()->parameter('id'),
+            'page.slug' => 'string|max:255|nullable|unique:we_pages,slug,' . request()->route()->parameter('id'),
             'page.description' => 'string|max:1000|nullable',
             'page.content' => 'string|nullable',
             'page.thumbnail' => 'string|max:255|nullable',
             'page.keywords' => 'string|max:255|nullable',
-            'page.status' => 'string|required|in:activated,disabled',
+            'page.status' => 'required',
             'page.order' => 'integer|min:0',
         ];
     }

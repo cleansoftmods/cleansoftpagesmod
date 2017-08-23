@@ -6,7 +6,7 @@ use WebEd\Base\Users\Models\User;
 
 class Page extends BaseModel implements PageModelContract
 {
-    protected $table = 'pages';
+    protected $table = 'we_pages';
 
     protected $primaryKey = 'id';
 

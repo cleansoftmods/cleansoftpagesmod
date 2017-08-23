@@ -90,8 +90,8 @@ class PageController extends BaseAdminController
 
                     do_action(BASE_ACTION_AFTER_DELETE, WEBED_PAGES, $ids, $result);
                     break;
-                case 'activated':
-                case 'disabled':
+                case 1:
+                case 0:
                     $result = $this->repository->updateMultiple($ids, [
                         'status' => $actionValue,
                     ]);
