@@ -2,6 +2,10 @@
 
 use Illuminate\Http\Request;
 use WebEd\Base\Http\Controllers\BaseAdminController;
+use WebEd\Base\Pages\Actions\CreatePageAction;
+use WebEd\Base\Pages\Actions\DeletePageAction;
+use WebEd\Base\Pages\Actions\RestorePageAction;
+use WebEd\Base\Pages\Actions\UpdatePageAction;
 use WebEd\Base\Pages\Http\DataTables\PagesListDataTable;
 use WebEd\Base\Pages\Http\Requests\CreatePageRequest;
 use WebEd\Base\Pages\Http\Requests\UpdatePageRequest;
@@ -10,7 +14,7 @@ use Yajra\Datatables\Engines\BaseEngine;
 
 class PageController extends BaseAdminController
 {
-    protected $module = 'webed-pages';
+    protected $module = WEBED_PAGES;
 
     /**
      * @param \WebEd\Base\Pages\Repositories\PageRepository $pageRepository
@@ -84,17 +88,20 @@ class PageController extends BaseAdminController
                     /**
                      * Delete pages
                      */
-                    $ids = do_filter(BASE_FILTER_BEFORE_DELETE, $ids, WEBED_PAGES);
-
-                    $result = $this->repository->deletePage($ids);
-
-                    do_action(BASE_ACTION_AFTER_DELETE, WEBED_PAGES, $ids, $result);
+                    $action = app(DeletePageAction::class);
+                    foreach ($ids as $id) {
+                        $this->deleteDelete($action, $id);
+                    }
                     break;
                 case 1:
                 case 0:
-                    $result = $this->repository->updateMultiple($ids, [
-                        'status' => $actionValue,
-                    ]);
+                    $action = app(UpdatePageAction::class);
+
+                    foreach ($ids as $id) {
+                        $action->run($id, [
+                            'status' => $actionValue,
+                        ]);
+                    }
                     break;
                 default:
                     return [
@@ -103,8 +110,8 @@ class PageController extends BaseAdminController
                     ];
                     break;
             }
-            $data['customActionMessage'] = $result ? trans('webed-core::base.form.request_completed') : trans('webed-core::base.form.error_occurred');
-            $data['customActionStatus'] = !$result ? 'danger' : 'success';
+            $data['customActionMessage'] = trans('webed-core::base.form.request_completed');
+            $data['customActionStatus'] = 'success';
         }
         return $data;
     }
@@ -115,15 +122,15 @@ class PageController extends BaseAdminController
      * @param $status
      * @return \Illuminate\Http\JsonResponse
      */
-    public function postUpdateStatus($id, $status)
+    public function postUpdateStatus(UpdatePageAction $action, $id, $status)
     {
         $data = [
             'status' => $status
         ];
-        $result = $this->repository->updatePage($id, $data);
-        $msg = $result ? trans('webed-core::base.form.request_completed') : trans('webed-core::base.form.error_occurred');
-        $code = $result ? \Constants::SUCCESS_NO_CONTENT_CODE : \Constants::ERROR_CODE;
-        return response()->json(response_with_messages($msg, !$result, $code), $code);
+
+        $result = $action->run($id, $data);
+
+        return response()->json($result, $result['response_code']);
     }
 
     /**
@@ -144,30 +151,25 @@ class PageController extends BaseAdminController
         return do_filter(BASE_FILTER_CONTROLLER, $this, WEBED_PAGES, 'create.get')->viewAdmin('create');
     }
 
-    public function postCreate(CreatePageRequest $request)
+    public function postCreate(CreatePageRequest $request, CreatePageAction $action)
     {
-        do_action(BASE_ACTION_BEFORE_CREATE, WEBED_PAGES, 'create.post');
-
         $data = $this->parseData($request);
         $data['created_by'] = $this->loggedInUser->id;
 
-        $result = $this->repository->createPage($data);
+        $result = $action->run($data);
 
-        do_action(BASE_ACTION_AFTER_CREATE, WEBED_PAGES, $result);
-
-        $msgType = !$result ? 'danger' : 'success';
-        $msg = $result ? trans('webed-core::base.form.request_completed') : trans('webed-core::base.form.error_occurred');
+        $msgType = $result['error'] ? 'danger' : 'success';
 
         flash_messages()
-            ->addMessages($msg, $msgType)
+            ->addMessages($result['messages'], $msgType)
             ->showMessagesOnSession();
 
-        if (!$result) {
+        if ($result['error']) {
             return redirect()->back()->withInput();
         }
 
         if ($this->request->has('_continue_edit')) {
-            return redirect()->to(route('admin::pages.edit.get', ['id' => $result]));
+            return redirect()->to(route('admin::pages.edit.get', ['id' => $result['data']['id']]));
         }
 
         return redirect()->to(route('admin::pages.index.get'));
@@ -205,38 +207,25 @@ class PageController extends BaseAdminController
     }
 
     /**
+     * @param UpdatePageRequest $request
+     * @param UpdatePageAction $action
      * @param $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postEdit(UpdatePageRequest $request, $id)
+    public function postEdit(UpdatePageRequest $request, UpdatePageAction $action, $id)
     {
-        $item = $this->repository->find($id);
-
-        if (!$item) {
-            flash_messages()
-                ->addMessages(trans($this->module . '::base.form.page_not_exists'), 'danger')
-                ->showMessagesOnSession();
-
-            return redirect()->back();
-        }
-
-        $item = do_filter(BASE_FILTER_BEFORE_UPDATE, $item, WEBED_PAGES, 'edit.post');
-
         $data = $this->parseData($request);
         $data['updated_by'] = $this->loggedInUser->id;
 
-        $result = $this->repository->updatePage($item, $data);
+        $result = $action->run($id, $data);
 
-        do_action(BASE_ACTION_AFTER_UPDATE, WEBED_PAGES, $id, $result);
-
-        $msgType = !$result ? 'danger' : 'success';
-        $msg = $result ? trans('webed-core::base.form.request_completed') : trans('webed-core::base.form.error_occurred');
+        $msgType = $result['error'] ? 'danger' : 'success';
 
         flash_messages()
-            ->addMessages($msg, $msgType)
+            ->addMessages($result['messages'], $msgType)
             ->showMessagesOnSession();
 
-        if ($this->request->has('_continue_edit')) {
+        if ($result['error'] || $this->request->has('_continue_edit')) {
             return redirect()->back();
         }
 
@@ -247,17 +236,33 @@ class PageController extends BaseAdminController
      * @param $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function deleteDelete($id)
+    public function deleteDelete(DeletePageAction $action, $id)
     {
-        $id = do_filter(BASE_FILTER_BEFORE_DELETE, $id, WEBED_PAGES);
+        $result = $action->run($id, false);
 
-        $result = $this->repository->deletePage($id);
+        return response()->json($result, $result['response_code']);
+    }
 
-        do_action(BASE_ACTION_AFTER_DELETE, WEBED_PAGES, $id, $result);
+    /**
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function deleteForceDelete(DeletePageAction $action, $id)
+    {
+        $result = $action->run($id, true);
 
-        $msg = $result ? trans('webed-core::base.form.request_completed') : trans('webed-core::base.form.error_occurred');
-        $code = $result ? \Constants::SUCCESS_NO_CONTENT_CODE : \Constants::ERROR_CODE;
-        return response()->json(response_with_messages($msg, !$result, $code), $code);
+        return response()->json($result, $result['response_code']);
+    }
+
+    /**
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function postRestore(RestorePageAction $action, $id)
+    {
+        $result = $action->run($id);
+
+        return response()->json($result, $result['response_code']);
     }
 
     /**

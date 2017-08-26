@@ -1,12 +1,15 @@
 <?php namespace WebEd\Base\Pages\Models;
 
+use Illuminate\Database\Eloquent\SoftDeletes;
 use WebEd\Base\Models\EloquentBase as BaseModel;
 use WebEd\Base\Pages\Models\Contracts\PageModelContract;
 use WebEd\Base\Users\Models\User;
 
 class Page extends BaseModel implements PageModelContract
 {
-    protected $table = 'we_pages';
+    use SoftDeletes;
+
+    protected $table = 'pages';
 
     protected $primaryKey = 'id';
 
@@ -20,7 +23,7 @@ class Page extends BaseModel implements PageModelContract
      */
     public function author()
     {
-        return $this->belongsTo(User::class, 'created_by');
+        return $this->belongsTo(User::class, 'created_by')->withTrashed();
     }
 
     /**
@@ -28,6 +31,6 @@ class Page extends BaseModel implements PageModelContract
      */
     public function modifier()
     {
-        return $this->belongsTo(User::class, 'updated_by');
+        return $this->belongsTo(User::class, 'updated_by')->withTrashed();
     }
 }

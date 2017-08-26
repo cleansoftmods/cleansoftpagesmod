@@ -31,7 +31,8 @@ class InstallModuleServiceProvider extends ServiceProvider
                 ->registerPermission('View pages', 'view-pages', $this->module)
                 ->registerPermission('Create pages', 'create-pages', $this->module)
                 ->registerPermission('Edit pages', 'edit-pages', $this->module)
-                ->registerPermission('Delete pages', 'delete-pages', $this->module);
+                ->registerPermission('Delete pages', 'delete-pages', $this->module)
+                ->registerPermission('Delete pages permanently', 'force-delete-pages', $this->module);
         });
     }
 }

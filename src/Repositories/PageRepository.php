@@ -3,9 +3,12 @@
 use WebEd\Base\Pages\Models\Page;
 use WebEd\Base\Repositories\Eloquent\EloquentBaseRepository;
 use WebEd\Base\Pages\Repositories\Contracts\PageRepositoryContract;
+use WebEd\Base\Repositories\Eloquent\Traits\EloquentUseSoftDeletes;
 
 class PageRepository extends EloquentBaseRepository implements PageRepositoryContract
 {
+    use EloquentUseSoftDeletes;
+
     /**
      * @param array $data
      * @return int

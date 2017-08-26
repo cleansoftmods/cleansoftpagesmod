@@ -3,9 +3,12 @@
 use WebEd\Base\Pages\Models\Page;
 use WebEd\Base\Repositories\Eloquent\EloquentBaseRepositoryCacheDecorator;
 use WebEd\Base\Pages\Repositories\Contracts\PageRepositoryContract;
+use WebEd\Base\Repositories\Traits\EloquentUseSoftDeletesCache;
 
 class PageRepositoryCacheDecorator extends EloquentBaseRepositoryCacheDecorator implements PageRepositoryContract
 {
+    use EloquentUseSoftDeletesCache;
+
     /**
      * @param array $data
      * @return int

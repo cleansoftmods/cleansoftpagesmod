@@ -1,8 +1,9 @@
 <?php namespace WebEd\Base\Pages\Repositories\Contracts;
 
 use WebEd\Base\Pages\Models\Page;
+use WebEd\Base\Repositories\Contracts\AbstractRepositoryContract;
 
-interface PageRepositoryContract
+interface PageRepositoryContract extends AbstractRepositoryContract
 {
     /**
      * @param array $data

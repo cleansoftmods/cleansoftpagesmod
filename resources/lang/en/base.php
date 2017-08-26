@@ -22,4 +22,5 @@ return [
             'helper' => 'The default page when user request without url slugs'
         ],
     ],
+    'admin_bar' => 'Edit this page',
 ];

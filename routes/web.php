@@ -38,9 +38,17 @@ Route::group(['prefix' => $adminRoute . '/pages', 'namespace' => $namespace], fu
         ->name('admin::pages.edit.post')
         ->middleware('has-permission:edit-pages');
 
-    $router->delete('/{id}', 'PageController@deleteDelete')
-        ->name('admin::pages.delete.delete')
+    $router->post('delete/{id}', 'PageController@deleteDelete')
+        ->name('admin::pages.delete.post')
         ->middleware('has-permission:delete-pages');
+
+    $router->post('force-delete/{id}', 'PageController@deleteForceDelete')
+        ->name('admin::pages.force-delete.post')
+        ->middleware('has-permission:force-delete-pages');
+
+    $router->post('restore/{id}', 'PageController@postRestore')
+        ->name('admin::pages.restore.post')
+        ->middleware('has-permission:edit-pages');
 });
 
 /**

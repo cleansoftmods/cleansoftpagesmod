@@ -22,4 +22,5 @@ return [
             'helper' => 'Trang mặc định được hiển thị khi người dùng truy cập ứng dụng'
         ],
     ],
+    'admin_bar' => 'Chỉnh sửa trang này',
 ];
