@@ -6,7 +6,7 @@ use Illuminate\Database\Schema\Blueprint;
 
 class InstallModuleServiceProvider extends ServiceProvider
 {
-    protected $module = 'webed-pages';
+    protected $moduleAlias = WEBED_PAGES;
 
     /**
      * Register the application services.
@@ -15,24 +15,12 @@ class InstallModuleServiceProvider extends ServiceProvider
      */
     public function register()
     {
-
-    }
-
-    public function boot()
-    {
-        /**
-         * Determine when our app booted
-         */
-        app()->booted(function () {
-            /**
-             * Register permissions
-             */
-            acl_permission()
-                ->registerPermission('View pages', 'view-pages', $this->module)
-                ->registerPermission('Create pages', 'create-pages', $this->module)
-                ->registerPermission('Edit pages', 'edit-pages', $this->module)
-                ->registerPermission('Delete pages', 'delete-pages', $this->module)
-                ->registerPermission('Delete pages permanently', 'force-delete-pages', $this->module);
-        });
+        acl_permission()
+            ->registerPermission('View pages', 'view-pages', $this->moduleAlias)
+            ->registerPermission('Create pages', 'create-pages', $this->moduleAlias)
+            ->registerPermission('Edit pages', 'edit-pages', $this->moduleAlias)
+            ->registerPermission('Delete pages', 'delete-pages', $this->moduleAlias)
+            ->registerPermission('Restore deleted pages', 'restore-deleted-pages', $this->moduleAlias)
+            ->registerPermission('Delete pages permanently', 'force-delete-pages', $this->moduleAlias);
     }
 }

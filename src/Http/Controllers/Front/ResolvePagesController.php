@@ -42,13 +42,13 @@ class ResolvePagesController extends BaseFrontController
             $page = $this->repository
                 ->findWhere([
                     'id' => do_filter('front.default-homepage.get', get_setting('default_homepage')),
-                    'status' => 'activated'
+                    'status' => 1
                 ]);
         } else {
             $page = $this->repository
                 ->findWhere([
                     'slug' => $slug,
-                    'status' => 'activated'
+                    'status' => 1
                 ]);
         }
 
@@ -66,7 +66,7 @@ class ResolvePagesController extends BaseFrontController
         /**
          * Update view count
          */
-        increase_view_count($page, $page->id);
+        increase_view_count(WEBED_PAGES, $page->id);
 
         seo()
             ->metaDescription($page->description)

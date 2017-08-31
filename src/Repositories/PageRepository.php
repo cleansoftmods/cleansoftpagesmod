@@ -46,7 +46,7 @@ class PageRepository extends EloquentBaseRepository implements PageRepositoryCon
     {
         $params = array_merge([
             'condition' => [
-                'status' => 'activated',
+                'status' => 1,
             ],
             'order_by' => [
                 'order' => 'ASC',

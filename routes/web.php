@@ -48,7 +48,7 @@ Route::group(['prefix' => $adminRoute . '/pages', 'namespace' => $namespace], fu
 
     $router->post('restore/{id}', 'PageController@postRestore')
         ->name('admin::pages.restore.post')
-        ->middleware('has-permission:edit-pages');
+        ->middleware('has-permission:restore-deleted-pages');
 });
 
 /**

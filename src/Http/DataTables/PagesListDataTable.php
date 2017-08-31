@@ -85,7 +85,7 @@ class PagesListDataTable extends AbstractDataTables
     {
         $this->setAjaxUrl(route('admin::pages.index.post'), 'POST');
 
-        $templates = ['' => trans('webed-core::datatables.select') . '...',] + get_templates('page');
+        $templates = ['' => trans('webed-core::datatables.select') . '...',] + get_templates(WEBED_PAGES);
 
         $this
             ->addFilter(1, form()->text('id', '', [
