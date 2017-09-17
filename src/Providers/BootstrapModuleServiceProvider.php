@@ -26,7 +26,7 @@ class BootstrapModuleServiceProvider extends ServiceProvider
      */
     protected function onSessionStarted()
     {
-        admin_bar()->registerLink('Page', route('admin::pages.create.get'), 'add-new');
+        admin_bar()->registerLink(trans('webed-pages::base.page'), route('admin::pages.create.get'), 'add-new');
 
         admin_quick_link()->register('page', [
             'title' => trans('webed-pages::base.page'),

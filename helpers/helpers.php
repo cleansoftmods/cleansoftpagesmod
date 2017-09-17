@@ -11,3 +11,24 @@ if (!function_exists('get_pages')) {
         return app(PageRepositoryContract::class)->getPages($params);
     }
 }
+
+if (!function_exists('get_homepage')) {
+    /**
+     * @return \WebEd\Base\Pages\Models\Page|null
+     */
+    function get_homepage()
+    {
+        return \WebEd\Base\Pages\Facades\HomepageFacade::getHomepage();
+    }
+}
+
+if (!function_exists('get_homepage_link')) {
+    /**
+     * @param string $defaultUrl
+     * @return string|null
+     */
+    function get_homepage_link($defaultUrl = null)
+    {
+        return \WebEd\Base\Pages\Facades\HomepageFacade::getHomepageLink($defaultUrl);
+    }
+}
