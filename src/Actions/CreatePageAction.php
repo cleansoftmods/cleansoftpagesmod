@@ -20,6 +20,8 @@ class CreatePageAction extends AbstractAction
     {
         do_action(BASE_ACTION_BEFORE_CREATE, WEBED_PAGES, 'create.post');
 
+        $data['created_by'] = get_current_logged_user_id();
+
         $result = $this->pageRepository->createPage($data);
 
         do_action(BASE_ACTION_AFTER_CREATE, WEBED_PAGES, $result);

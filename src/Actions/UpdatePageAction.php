@@ -25,11 +25,11 @@ class UpdatePageAction extends AbstractAction
     {
         $item = $this->pageRepository->find($id);
 
+        $item = do_filter(BASE_FILTER_BEFORE_UPDATE, $item, WEBED_PAGES, 'edit.post');
+
         if (!$item) {
             return $this->error(trans('webed-pages::base.form.page_not_exists'));
         }
-
-        $item = do_filter(BASE_FILTER_BEFORE_UPDATE, $item, WEBED_PAGES, 'edit.post');
 
         $data['updated_by'] = get_current_logged_user_id();
 

@@ -66,7 +66,7 @@ class PageController extends BaseAdminController
     protected function groupAction()
     {
         $data = [];
-        if ($this->request->get('customActionType', null) === 'group_action') {
+        if ($this->request->input('customActionType', null) === 'group_action') {
             if (!$this->userRepository->hasPermission($this->loggedInUser, ['edit-pages'])) {
                 return [
                     'customActionMessage' => trans('webed-acl::base.do_not_have_permission'),
@@ -74,8 +74,8 @@ class PageController extends BaseAdminController
                 ];
             }
 
-            $ids = (array)$this->request->get('id', []);
-            $actionValue = $this->request->get('customActionValue');
+            $ids = (array)$this->request->input('id', []);
+            $actionValue = $this->request->input('customActionValue');
 
             switch ($actionValue) {
                 case 'deleted':
@@ -90,7 +90,7 @@ class PageController extends BaseAdminController
                      */
                     $action = app(DeletePageAction::class);
                     foreach ($ids as $id) {
-                        $this->deleteDelete($action, $id);
+                        $this->postDelete($action, $id);
                     }
                     break;
                 case 1:
@@ -152,7 +152,6 @@ class PageController extends BaseAdminController
     public function postCreate(CreatePageRequest $request, CreatePageAction $action)
     {
         $data = $this->parseData($request);
-        $data['created_by'] = $this->loggedInUser->id;
 
         $result = $action->run($data);
 
@@ -213,7 +212,6 @@ class PageController extends BaseAdminController
     public function postEdit(UpdatePageRequest $request, UpdatePageAction $action, $id)
     {
         $data = $this->parseData($request);
-        $data['updated_by'] = $this->loggedInUser->id;
 
         $result = $action->run($id, $data);
 
@@ -234,7 +232,7 @@ class PageController extends BaseAdminController
      * @param $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function deleteDelete(DeletePageAction $action, $id)
+    public function postDelete(DeletePageAction $action, $id)
     {
         $result = $action->run($id, false);
 
@@ -245,7 +243,7 @@ class PageController extends BaseAdminController
      * @param $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function deleteForceDelete(DeletePageAction $action, $id)
+    public function postForceDelete(DeletePageAction $action, $id)
     {
         $result = $action->run($id, true);
 
@@ -269,7 +267,7 @@ class PageController extends BaseAdminController
      */
     protected function parseData(Request $request)
     {
-        $data = $request->get('page', []);
+        $data = $request->input('page', []);
         if (!$data['slug']) {
             $data['slug'] = str_slug($data['title']);
         }

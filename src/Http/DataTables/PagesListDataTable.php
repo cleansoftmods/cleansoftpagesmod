@@ -121,7 +121,7 @@ class PagesListDataTable extends AbstractDataTables
      */
     protected function fetchDataForAjax()
     {
-        return datatable()->of($this->model)
+        return webed_datatable()->of($this->model)
             ->rawColumns(['actions'])
             ->filterColumn('status', function ($query, $keyword) {
                 if ($keyword === 'deleted') {
