@@ -156,12 +156,9 @@ class BootstrapModuleServiceProvider extends ServiceProvider
             return get_templates(WEBED_PAGES);
         })
             ->registerRule('basic', trans('webed-custom-fields::rules.page'), 'page', function () {
-                $pages = get_pages([
+                return get_pages([
                     'select' => [
                         'id', 'title'
-                    ],
-                    'condition' => [
-
                     ],
                     'order_by' => [
                         'order' => 'ASC',
@@ -170,8 +167,6 @@ class BootstrapModuleServiceProvider extends ServiceProvider
                 ])
                     ->pluck('title', 'id')
                     ->toArray();
-
-                return $pages;
             })
             ->registerRule('other', trans('webed-custom-fields::rules.model_name'), 'model_name', function () {
                 return [
