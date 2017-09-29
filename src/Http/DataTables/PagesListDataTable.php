@@ -1,10 +1,12 @@
 <?php namespace WebEd\Base\Pages\Http\DataTables;
 
 use WebEd\Base\Http\DataTables\AbstractDataTables;
+use WebEd\Base\Pages\Actions\DeletePageAction;
+use WebEd\Base\Pages\Actions\UpdatePageAction;
 use WebEd\Base\Pages\Models\Page;
-use Yajra\Datatables\Engines\CollectionEngine;
-use Yajra\Datatables\Engines\EloquentEngine;
-use Yajra\Datatables\Engines\QueryBuilderEngine;
+use Yajra\DataTables\CollectionDataTable;
+use Yajra\DataTables\EloquentDataTable;
+use Yajra\DataTables\QueryDataTable;
 
 class PagesListDataTable extends AbstractDataTables
 {
@@ -27,7 +29,7 @@ class PagesListDataTable extends AbstractDataTables
     /**
      * @return array
      */
-    public function headings()
+    public function headings(): array
     {
         return [
             'id' => [
@@ -64,7 +66,7 @@ class PagesListDataTable extends AbstractDataTables
     /**
      * @return array
      */
-    public function columns()
+    public function columns(): array
     {
         return [
             ['data' => 'id', 'name' => 'id', 'searchable' => false, 'orderable' => false],
@@ -81,7 +83,7 @@ class PagesListDataTable extends AbstractDataTables
     /**
      * @return string
      */
-    public function run()
+    public function run(): string
     {
         $this->setAjaxUrl(route('admin::pages.index.post'), 'POST');
 
@@ -117,7 +119,7 @@ class PagesListDataTable extends AbstractDataTables
     }
 
     /**
-     * @return CollectionEngine|EloquentEngine|QueryBuilderEngine|mixed
+     * @return CollectionDataTable|EloquentDataTable|QueryDataTable|mixed
      */
     protected function fetchDataForAjax()
     {
@@ -208,5 +210,66 @@ class PagesListDataTable extends AbstractDataTables
 
                 return $editBtn . $activeBtn . $disableBtn . $deleteBtn;
             });
+    }
+
+    /**
+     * Handle group actions
+     * @return array
+     */
+    protected function groupAction(): array
+    {
+        $request = request();
+
+        $data = [];
+        if ($request->input('customActionType', null) === 'group_action') {
+            if (!has_permissions(get_current_logged_user(), ['edit-pages'])) {
+                return [
+                    'customActionMessage' => trans('webed-acl::base.do_not_have_permission'),
+                    'customActionStatus' => 'danger',
+                ];
+            }
+
+            $ids = (array)$request->input('id', []);
+            $actionValue = $request->input('customActionValue');
+
+            switch ($actionValue) {
+                case 'deleted':
+                    if (!has_permissions(get_current_logged_user(), ['delete-pages'])) {
+                        return [
+                            'customActionMessage' => trans('webed-acl::base.do_not_have_permission'),
+                            'customActionStatus' => 'danger',
+                        ];
+                    }
+                    /**
+                     * Delete pages
+                     */
+                    $action = app(DeletePageAction::class);
+
+                    foreach ($ids as $id) {
+                        $action->run($action, $id);
+                    }
+                    break;
+                case 1:
+                case 0:
+                    $action = app(UpdatePageAction::class);
+
+                    foreach ($ids as $id) {
+                        $action->run($id, [
+                            'status' => $actionValue,
+                        ]);
+                    }
+                    break;
+                default:
+                    return [
+                        'customActionMessage' => trans('webed-core::errors.' . \Constants::METHOD_NOT_ALLOWED . '.message'),
+                        'customActionStatus' => 'danger'
+                    ];
+                    break;
+            }
+            $data['customActionMessage'] = trans('webed-core::base.form.request_completed');
+            $data['customActionStatus'] = 'success';
+        }
+
+        return $data;
     }
 }

@@ -10,7 +10,6 @@ use WebEd\Base\Pages\Http\DataTables\PagesListDataTable;
 use WebEd\Base\Pages\Http\Requests\CreatePageRequest;
 use WebEd\Base\Pages\Http\Requests\UpdatePageRequest;
 use WebEd\Base\Pages\Repositories\Contracts\PageRepositoryContract;
-use Yajra\Datatables\Engines\BaseEngine;
 
 class PageController extends BaseAdminController
 {
@@ -49,71 +48,12 @@ class PageController extends BaseAdminController
     }
 
     /**
-     * @param PagesListDataTable|BaseEngine $pagesListDataTable
+     * @param PagesListDataTable $pagesListDataTable
      * @return mixed
      */
     public function postListing(PagesListDataTable $pagesListDataTable)
     {
-        $data = $pagesListDataTable->with($this->groupAction());
-
-        return do_filter(BASE_FILTER_CONTROLLER, $data, WEBED_PAGES, 'index.post', $this);
-    }
-
-    /**
-     * Handle group actions
-     * @return array
-     */
-    protected function groupAction()
-    {
-        $data = [];
-        if ($this->request->input('customActionType', null) === 'group_action') {
-            if (!$this->userRepository->hasPermission($this->loggedInUser, ['edit-pages'])) {
-                return [
-                    'customActionMessage' => trans('webed-acl::base.do_not_have_permission'),
-                    'customActionStatus' => 'danger',
-                ];
-            }
-
-            $ids = (array)$this->request->input('id', []);
-            $actionValue = $this->request->input('customActionValue');
-
-            switch ($actionValue) {
-                case 'deleted':
-                    if (!$this->userRepository->hasPermission($this->loggedInUser, ['delete-pages'])) {
-                        return [
-                            'customActionMessage' => trans('webed-acl::base.do_not_have_permission'),
-                            'customActionStatus' => 'danger',
-                        ];
-                    }
-                    /**
-                     * Delete pages
-                     */
-                    $action = app(DeletePageAction::class);
-                    foreach ($ids as $id) {
-                        $this->postDelete($action, $id);
-                    }
-                    break;
-                case 1:
-                case 0:
-                    $action = app(UpdatePageAction::class);
-
-                    foreach ($ids as $id) {
-                        $action->run($id, [
-                            'status' => $actionValue,
-                        ]);
-                    }
-                    break;
-                default:
-                    return [
-                        'customActionMessage' => trans('webed-core::errors.' . \Constants::METHOD_NOT_ALLOWED . '.message'),
-                        'customActionStatus' => 'danger'
-                    ];
-                    break;
-            }
-            $data['customActionMessage'] = trans('webed-core::base.form.request_completed');
-            $data['customActionStatus'] = 'success';
-        }
-        return $data;
+        return do_filter(BASE_FILTER_CONTROLLER, $pagesListDataTable, WEBED_PAGES, 'index.post', $this);
     }
 
     /**
