@@ -41,7 +41,10 @@ class BootstrapModuleServiceProvider extends ServiceProvider
         $this->registerMenu();
         $this->registerMenuDashboard();
         $this->registerSettings();
-        $this->registerPagesFields();
+
+        if (class_exists('WebEd\Base\CustomFields\Facades\CustomFieldSupportFacade')) {
+            $this->registerPagesFields();
+        }
     }
 
     protected function registerMenuDashboard()
@@ -152,10 +155,10 @@ class BootstrapModuleServiceProvider extends ServiceProvider
 
     protected function registerPagesFields()
     {
-        CustomFieldSupportFacade::registerRule('basic', trans('webed-custom-fields::rules.page_template'), 'page_template', function () {
+        CustomFieldSupportFacade::expandRule('basic', trans('webed-custom-fields::rules.page_template'), 'page_template', function () {
             return get_templates(WEBED_PAGES);
         })
-            ->registerRule('basic', trans('webed-custom-fields::rules.page'), 'page', function () {
+            ->expandRule('basic', trans('webed-custom-fields::rules.page'), 'page', function () {
                 return get_pages([
                     'select' => [
                         'id', 'title'
@@ -168,7 +171,7 @@ class BootstrapModuleServiceProvider extends ServiceProvider
                     ->pluck('title', 'id')
                     ->toArray();
             })
-            ->registerRule('other', trans('webed-custom-fields::rules.model_name'), 'model_name', function () {
+            ->expandRule('other', trans('webed-custom-fields::rules.model_name'), 'model_name', function () {
                 return [
                     WEBED_PAGES => trans('webed-custom-fields::rules.model_name_page'),
                 ];
